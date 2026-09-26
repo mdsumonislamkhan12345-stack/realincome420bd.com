@@ -548,13 +548,19 @@
         </div>
 
         <div class="welcome-card" id="homeContent">
+            <!-- আপনার আসল ছবি এখানে লোড করার জন্য ফাইল ইনপুট যুক্ত করা হলো -->
+            <div style="margin-bottom: 20px;">
+                <img id="displayUserImg" src="1000006407_2.jpg" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'120\' height=\'120\'><rect width=\'100%\' height=\'100%\' fill=\'%23334155\'/><text x=\'50%\' y=\'50%\' fill=\'%2310b981\' font-size=\'14\' text-anchor=\'middle\' dominant-baseline=\'middle\' font-family=\'sans-serif\'>ছবি যুক্ত করুন</text></svg>'" alt="মোঃ সুমন ইসলাম" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid #10b981; box-shadow: 0 4px 15px rgba(0,0,0,0.4); display: block; margin: 0 auto 10px auto;">
+                <input type="file" id="localImagePicker" accept="image/*" style="font-size: 0.85rem; color: #94a3b8;" onchange="previewMyImage(event)">
+            </div>
             <h2>সোশ্যাল মিডিয়া টাস্ক ও আর্নিং প্ল্যাটফর্ম</h2>
             <p>ফেসবুক পেজ ফলো করে, ইউটিউব চ্যানেল সাবস্ক্রাইব করে সহজে ইনকাম করুন।</p>
             <button class="submit-btn" style="width: 200px; margin: 0 auto;" onclick="openModal('signupModal')">শুরু করুন</button>
         </div>
 
         <div id="dashboardArea">
-            <div style="margin-bottom: 20px;">
+            <div style="text-align: center; margin-bottom: 25px;">
+                <img id="dashboardUserImg" src="1000006407_2.jpg" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\'><rect width=\'100%\' height=\'100%\' fill=\'%23334155\'/><text x=\'50%\' y=\'50%\' fill=\'%2310b981\' font-size=\'12\' text-anchor=\'middle\' dominant-baseline=\'middle\' font-family=\'sans-serif\'>ছবি</text></svg>'" alt="মোঃ সুমন ইসলাম" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #10b981; box-shadow: 0 4px 10px rgba(0,0,0,0.3); margin-bottom: 10px; display: block; margin-left: auto; margin-right: auto;">
                 <h2>স্বাগতম, <span id="profileName"></span>!</h2>
                 <p style="color: #94a3b8;">আপনার ইউজার ড্যাশবোর্ড প্যানেল</p>
             </div>
@@ -725,7 +731,6 @@
                 <button class="submit-btn" style="width: auto; padding: 8px 15px; background: #ef4444; color: #fff;" onclick="logout()">অ্যাডমিন লগআউট</button>
             </div>
 
-            <!-- ইউজার জিমেল দিয়ে সার্চ সেকশন -->
             <div class="section-box">
                 <h3>🔍 ইউজারের জিমেল দিয়ে সার্চ করুন</h3>
                 <div style="display: flex; gap: 10px; margin-bottom: 15px;">
@@ -1021,6 +1026,29 @@
         let currentActiveTask = null;
         let selectedProofBase64 = '';
 
+        function previewMyImage(event) {
+            const file = event.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const base64Img = e.target.result;
+                    document.getElementById('displayUserImg').src = base64Img;
+                    document.getElementById('dashboardUserImg').src = base64Img;
+                    localStorage.setItem('sumanCustomProfilePic', base64Img);
+                    alert('আপনার ছবি সফলভাবে সেট করা হয়েছে!');
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function loadSavedImage() {
+            let savedPic = localStorage.getItem('sumanCustomProfilePic');
+            if(savedPic) {
+                document.getElementById('displayUserImg').src = savedPic;
+                document.getElementById('dashboardUserImg').src = savedPic;
+            }
+        }
+
         function togglePassword(fieldId, iconElement) {
             const passwordInput = document.getElementById(fieldId);
             if (passwordInput.type === "password") {
@@ -1033,6 +1061,7 @@
         }
 
         function checkAuthState() {
+            loadSavedImage();
             let loggedUser = localStorage.getItem('sumanSiteUser');
             let role = localStorage.getItem('sumanUserRole');
 
@@ -1088,6 +1117,7 @@
         }
 
         function showDashboard() {
+            loadSavedImage();
             let role = localStorage.getItem('sumanUserRole');
             if(role === 'admin') {
                 checkAuthState();
@@ -1674,4 +1704,4 @@
         window.onload = function() { checkAuthState(); }
     </script>
 </body>
-                </html>
+</html>
