@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>মোঃ সুমন ইসলাম - মাইক্রো জবস ও আর্নিং পোর্টাল</title>
+    <title>মোঃ সুমন ইসলাম - মাইক্রো জবস ও আর্নিং প্ল্যাটফর্ম</title>
     <style>
         * {
             box-sizing: border-box;
@@ -153,11 +153,34 @@
 
         .welcome-card {
             background: #1e293b;
-            padding: 40px;
+            padding: 40px 20px;
             border-radius: 15px;
             border: 1px solid #334155;
             box-shadow: 0 10px 25px rgba(0,0,0,0.4);
             text-align: center;
+        }
+
+        /* পারফেক্ট গোল বৃত্ত এবং ছবি ফিক্স করার বক্স */
+        .profile-img-container {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px auto;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid #10b981;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            background: #0f172a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .profile-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
         }
 
         .welcome-card h2 {
@@ -281,7 +304,7 @@
             color: #fff;
         }
 
-        #dashboardArea, #adminDashboard, #historyArea {
+        #dashboardArea, #adminDashboard, #historyArea, #profileViewArea {
             display: none;
         }
 
@@ -547,11 +570,10 @@
             </marquee>
         </div>
 
+        <!-- হোমপেজ কার্ড (আপনার ছবিটি এখানে বসানো হয়েছে) -->
         <div class="welcome-card" id="homeContent">
-            <!-- আপনার আসল ছবি এখানে লোড করার জন্য ফাইল ইনপুট যুক্ত করা হলো -->
-            <div style="margin-bottom: 20px;">
-                <img id="displayUserImg" src="1000006407_2.jpg" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'120\' height=\'120\'><rect width=\'100%\' height=\'100%\' fill=\'%23334155\'/><text x=\'50%\' y=\'50%\' fill=\'%2310b981\' font-size=\'14\' text-anchor=\'middle\' dominant-baseline=\'middle\' font-family=\'sans-serif\'>ছবি যুক্ত করুন</text></svg>'" alt="মোঃ সুমন ইসলাম" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid #10b981; box-shadow: 0 4px 15px rgba(0,0,0,0.4); display: block; margin: 0 auto 10px auto;">
-                <input type="file" id="localImagePicker" accept="image/*" style="font-size: 0.85rem; color: #94a3b8;" onchange="previewMyImage(event)">
+            <div class="profile-img-container">
+                <img id="displayUserImg" src="https://img.sanishtech.com/u/c7679322bc63ccc9ed6343ccae70184d.jpg" alt="মোঃ সুমন ইসলাম">
             </div>
             <h2>সোশ্যাল মিডিয়া টাস্ক ও আর্নিং প্ল্যাটফর্ম</h2>
             <p>ফেসবুক পেজ ফলো করে, ইউটিউব চ্যানেল সাবস্ক্রাইব করে সহজে ইনকাম করুন।</p>
@@ -560,7 +582,10 @@
 
         <div id="dashboardArea">
             <div style="text-align: center; margin-bottom: 25px;">
-                <img id="dashboardUserImg" src="1000006407_2.jpg" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\'><rect width=\'100%\' height=\'100%\' fill=\'%23334155\'/><text x=\'50%\' y=\'50%\' fill=\'%2310b981\' font-size=\'12\' text-anchor=\'middle\' dominant-baseline=\'middle\' font-family=\'sans-serif\'>ছবি</text></svg>'" alt="মোঃ সুমন ইসলাম" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #10b981; box-shadow: 0 4px 10px rgba(0,0,0,0.3); margin-bottom: 10px; display: block; margin-left: auto; margin-right: auto;">
+                <div class="profile-img-container" style="width: 100px; height: 100px; margin-bottom: 10px;">
+                    <!-- ড্যাশবোর্ডের ছবি -->
+                    <img id="dashboardUserImg" src="https://img.sanishtech.com/u/c7679322bc63ccc9ed6343ccae70184d.jpg" alt="মোঃ সুমন ইসলাম">
+                </div>
                 <h2>স্বাগতম, <span id="profileName"></span>!</h2>
                 <p style="color: #94a3b8;">আপনার ইউজার ড্যাশবোর্ড প্যানেল</p>
             </div>
@@ -590,7 +615,7 @@
         </div>
 
         <!-- Full Profile View -->
-        <div id="profileViewArea" style="display: none;">
+        <div id="profileViewArea">
             <div style="margin-bottom: 15px;">
                 <button class="submit-btn" style="width: auto; padding: 8px 15px;" onclick="showDashboard()">← ড্যাশবোর্ডে ফিরে যান</button>
             </div>
@@ -1026,29 +1051,6 @@
         let currentActiveTask = null;
         let selectedProofBase64 = '';
 
-        function previewMyImage(event) {
-            const file = event.target.files[0];
-            if(file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const base64Img = e.target.result;
-                    document.getElementById('displayUserImg').src = base64Img;
-                    document.getElementById('dashboardUserImg').src = base64Img;
-                    localStorage.setItem('sumanCustomProfilePic', base64Img);
-                    alert('আপনার ছবি সফলভাবে সেট করা হয়েছে!');
-                }
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function loadSavedImage() {
-            let savedPic = localStorage.getItem('sumanCustomProfilePic');
-            if(savedPic) {
-                document.getElementById('displayUserImg').src = savedPic;
-                document.getElementById('dashboardUserImg').src = savedPic;
-            }
-        }
-
         function togglePassword(fieldId, iconElement) {
             const passwordInput = document.getElementById(fieldId);
             if (passwordInput.type === "password") {
@@ -1061,7 +1063,6 @@
         }
 
         function checkAuthState() {
-            loadSavedImage();
             let loggedUser = localStorage.getItem('sumanSiteUser');
             let role = localStorage.getItem('sumanUserRole');
 
@@ -1117,7 +1118,6 @@
         }
 
         function showDashboard() {
-            loadSavedImage();
             let role = localStorage.getItem('sumanUserRole');
             if(role === 'admin') {
                 checkAuthState();
@@ -1234,6 +1234,7 @@
         function showHistory() {
             document.getElementById('dashboardArea').style.display = 'none';
             document.getElementById('profileViewArea').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'none';
             document.getElementById('historyArea').style.display = 'block';
             renderUserHistory();
         }
@@ -1660,7 +1661,7 @@
                         <a href="${p.link}" target="_blank" style="color:#38bdf8; font-size:0.85rem;">কাজের লিংক দেখুন</a>
                     </div>
                     <div>
-                        <img src="${p.screenshot}" style="width:80px; height:50px; object-fit:cover; border-radius:4px; border:1px solid #475569;" title="স্ক্রিনশট">
+                        <img src="${p.screenshot}" style="width:80px; height:50px; object-fit:cover; border-radius:4px; border:1px실 solid #475569;" title="স্ক্রিনশট">
                     </div>
                     <div>
                         <button class="approve-btn" onclick="approveTaskProof(${p.id})">এপ্রুভ</button>
@@ -1680,7 +1681,7 @@
             `).join('') || '<p style="color: #94a3b8;">কোনো পেন্ডিং ডিপোজিট নেই।</p>';
 
             document.getElementById('adminWithdrawList').innerHTML = withdraws.filter(w => w.status.includes('Pending')).map(w => `
-                <div class="request-id">
+                <div class="request-item">
                     <div><strong>ইউজার:</strong> ${w.user} | <strong>মেথড:</strong> ${w.method} (${w.number}) | <strong>পরিমাণ:</strong> ৳${w.amount}</div>
                     <div>
                         <button class="approve-btn" onclick="approveWithdraw(${w.id})">এপ্রুভ</button>
