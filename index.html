@@ -230,7 +230,6 @@
             outline: none;
         }
 
-        /* Password Wrapper for Eye Icon */
         .password-container {
             position: relative;
             width: 100%;
@@ -610,7 +609,7 @@
                         <span class="profile-field-value" id="viewPhone">-</span>
                     </div>
                     <div class="profile-field-group">
-                        <span class="profile-field-label">ইমেইল</span>
+                        <span class="profile-field-label">জিমেল (ইমেইল)</span>
                         <span class="profile-field-value" id="viewEmail">-</span>
                     </div>
 
@@ -721,16 +720,16 @@
             <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
                 <div>
                     <h2>অ্যাডমিন কন্ট্রোল প্যানেল</h2>
-                    <p style="color: #94a3b8;">ইউজার সার্চ করুন, প্রোফাইল ও কাজের হিস্টোরি দেখুন</p>
+                    <p style="color: #94a3b8;">জিমেল দিয়ে ইউজার সার্চ করুন, প্রোফাইল ও কাজের হিস্টোরি দেখুন</p>
                 </div>
                 <button class="submit-btn" style="width: auto; padding: 8px 15px; background: #ef4444; color: #fff;" onclick="logout()">অ্যাডমিন লগআউট</button>
             </div>
 
-            <!-- ইউজার জিমেল বা ইউজারনেম দিয়ে সার্চ সেকশন -->
+            <!-- ইউজার জিমেল দিয়ে সার্চ সেকশন -->
             <div class="section-box">
-                <h3>🔍 ইউজার জিমেল/ইউজারনেম দিয়ে সার্চ করুন</h3>
+                <h3>🔍 ইউজারের জিমেল দিয়ে সার্চ করুন</h3>
                 <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                    <input type="text" id="adminSearchInput" placeholder="ইউজারের জিমেল বা ইউজারনেম লিখুন..." style="flex: 1; padding: 10px; background: #0f172a; border: 1px solid #475569; border-radius: 6px; color: #fff;">
+                    <input type="text" id="adminSearchInput" placeholder="ইউজারের জিমেল লিখুন..." style="flex: 1; padding: 10px; background: #0f172a; border: 1px solid #475569; border-radius: 6px; color: #fff;">
                     <button class="submit-btn" style="width: auto; margin-top: 0; padding: 10px 20px;" onclick="searchUserByAdmin()">সার্চ করুন</button>
                 </div>
                 <div id="adminSearchResult" style="background: #0f172a; padding: 15px; border-radius: 6px; border: 1px solid #334155; display: none;"></div>
@@ -771,7 +770,7 @@
             <span class="close-btn" onclick="closeModal('adminLoginModal')">&times;</span>
             <h3>অ্যাডমিন সিকিউরিটি ভেরিফিকেশন</h3>
             <div class="notice-box" style="text-align: center;">
-                নিরাপত্তার স্বার্থে ইউজারনেম গোপন রাখা হয়েছে।<br>শুধু আপনার অ্যাডমিন পাসওয়ার্ডটি দিন।
+                নিরাপত্তার স্বার্থে ইউজারনেম গোপন রাখা হয়েছে।<br>শুধু আপনার অ্যাডমিন পাসওয়ার্ড দিন।
             </div>
             <div class="form-group">
                 <label>অ্যাডমিন পাসওয়ার্ড</label>
@@ -790,8 +789,8 @@
             <span class="close-btn" onclick="closeModal('citizenLoginModal')">&times;</span>
             <h3>নাগরিক লগইন</h3>
             <div class="form-group">
-                <label>ইউজারনেম বা জিমেল (ইমেইল)</label>
-                <input type="text" id="citizenUser" placeholder="আপনার জিমেল বা ইউজারনেম দিন">
+                <label>জিমেল বা ইউজারনেম</label>
+                <input type="text" id="citizenUser" placeholder="জিমেল দিন">
             </div>
             <div class="form-group">
                 <label>পাসওয়ার্ড</label>
@@ -851,7 +850,7 @@
             </div>
             <div class="form-group">
                 <label>জিমেল (ইমেইল)</label>
-                <input type="email" id="updateEmail" placeholder="email@gmail.com">
+                <input type="email" id="updateEmail" placeholder="email@gmail.com" readonly style="color: #94a3b8; cursor: not-allowed;">
             </div>
             <div class="form-group">
                 <label>পিতার নাম (বাংলা)</label>
@@ -924,8 +923,8 @@
                 <input type="text" id="signupName" placeholder="পূর্ণ নাম লিখুন">
             </div>
             <div class="form-group">
-                <label>জিমেল (ইমেইল) বা ইউজারনেম</label>
-                <input type="text" id="signupEmail" placeholder="gmail অথবা ইউজারনেম দিন">
+                <label>জিমেল (ইমেইল)</label>
+                <input type="text" id="signupEmail" placeholder="gmail দিন">
             </div>
             <div class="form-group">
                 <label>পাসওয়ার্ড</label>
@@ -1015,24 +1014,13 @@
     </div>
 
     <script>
-        let usersList = JSON.parse(localStorage.getItem('sumanUsersDatabase'));
-        if (!usersList || !Array.isArray(usersList)) {
-            usersList = [];
-            localStorage.setItem('sumanUsersDatabase', JSON.stringify(usersList));
-        }
-
         let tasks = JSON.parse(localStorage.getItem('sumanTasksList')) || [
             { id: 1, type: "ফেসবুক পেজ ফলো", link: "https://www.facebook.com/profile.php?id=61587612126892", reward: 2, quantity: 4, completedCount: 0 }
         ];
 
-        let deposits = JSON.parse(localStorage.getItem('sumanUserDeposits')) || [];
-        let withdraws = JSON.parse(localStorage.getItem('sumanUserWithdraws')) || [];
-        let taskProofs = JSON.parse(localStorage.getItem('sumanTaskProofs')) || [];
-
         let currentActiveTask = null;
         let selectedProofBase64 = '';
 
-        // পাসওয়ার্ড দেখার জন্য টগল ফাংশন
         function togglePassword(fieldId, iconElement) {
             const passwordInput = document.getElementById(fieldId);
             if (passwordInput.type === "password") {
@@ -1052,7 +1040,9 @@
                 document.getElementById('homeContent').style.display = 'none';
                 document.getElementById('authNav').style.display = 'none';
                 document.getElementById('userNav').style.display = 'flex';
-                document.getElementById('userNameDisplay').innerText = localStorage.getItem('sumanProfileName') || loggedUser;
+                
+                let displayName = localStorage.getItem('sumanProfileName_' + loggedUser) || loggedUser;
+                document.getElementById('userNameDisplay').innerText = displayName;
 
                 if (role === 'admin') {
                     document.getElementById('dashboardArea').style.display = 'none';
@@ -1091,9 +1081,8 @@
             }
         }
 
-        // WhatsApp Live Chat Integration
         function openWhatsAppChat() {
-            const phoneNumber = "8801743461642"; // আপনার WhatsApp নাম্বার
+            const phoneNumber = "8801743461642";
             const message = encodeURIComponent("হ্যালো সুমন ভাই, আমার একটি সমস্যা বা সাহায্য প্রয়োজন।");
             window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
         }
@@ -1121,32 +1110,32 @@
 
             let currentUser = localStorage.getItem('sumanSiteUser');
             
-            document.getElementById('viewName').innerText = localStorage.getItem('sumanProfileName') || '-';
-            document.getElementById('viewNameEn').innerText = localStorage.getItem('sumanProfileNameEn_' + currentUser) || 'Md Abdul Barek';
-            document.getElementById('viewPhone').innerText = localStorage.getItem('sumanProfilePhone_' + currentUser) || '01743461642';
-            document.getElementById('viewEmail').innerText = localStorage.getItem('sumanProfileEmail_' + currentUser) || (currentUser && currentUser.includes('@') ? currentUser : 'kabboaloadharer1@gmail.com');
-            document.getElementById('viewFather').innerText = localStorage.getItem('sumanProfileFather_' + currentUser) || 'সহর উদ্দিন';
-            document.getElementById('viewFatherEn').innerText = localStorage.getItem('sumanProfileFatherEn_' + currentUser) || 'sohor uddin';
-            document.getElementById('viewMother').innerText = localStorage.getItem('sumanProfileMother_' + currentUser) || 'জরিমন';
-            document.getElementById('viewMotherEn').innerText = localStorage.getItem('sumanProfileMotherEn_' + currentUser) || 'jorimon';
-            document.getElementById('viewSpouseBn').innerText = localStorage.getItem('sumanProfileSpouseBn_' + currentUser) || 'আজিদা';
-            document.getElementById('viewSpouseEn').innerText = localStorage.getItem('sumanProfileSpouseEn_' + currentUser) || 'azida';
-            document.getElementById('viewDob').innerText = localStorage.getItem('sumanProfileDob_' + currentUser) || '1973-07-12';
-            document.getElementById('viewNid').innerText = localStorage.getItem('sumanProfileNid_' + currentUser) || '19737311538834428';
+            document.getElementById('viewName').innerText = localStorage.getItem('sumanProfileName_' + currentUser) || '-';
+            document.getElementById('viewNameEn').innerText = localStorage.getItem('sumanProfileNameEn_' + currentUser) || '-';
+            document.getElementById('viewPhone').innerText = localStorage.getItem('sumanProfilePhone_' + currentUser) || '-';
+            document.getElementById('viewEmail').innerText = currentUser || '-';
+            document.getElementById('viewFather').innerText = localStorage.getItem('sumanProfileFather_' + currentUser) || '-';
+            document.getElementById('viewFatherEn').innerText = localStorage.getItem('sumanProfileFatherEn_' + currentUser) || '-';
+            document.getElementById('viewMother').innerText = localStorage.getItem('sumanProfileMother_' + currentUser) || '-';
+            document.getElementById('viewMotherEn').innerText = localStorage.getItem('sumanProfileMotherEn_' + currentUser) || '-';
+            document.getElementById('viewSpouseBn').innerText = localStorage.getItem('sumanProfileSpouseBn_' + currentUser) || '-';
+            document.getElementById('viewSpouseEn').innerText = localStorage.getItem('sumanProfileSpouseEn_' + currentUser) || '-';
+            document.getElementById('viewDob').innerText = localStorage.getItem('sumanProfileDob_' + currentUser) || '-';
+            document.getElementById('viewNid').innerText = localStorage.getItem('sumanProfileNid_' + currentUser) || '-';
             document.getElementById('viewBlood').innerText = localStorage.getItem('sumanProfileBlood_' + currentUser) || 'B+';
-            document.getElementById('viewOccupation').innerText = localStorage.getItem('sumanProfileOccupation_' + currentUser) || 'ব্যবসায়ী';
-            document.getElementById('viewCurrentAddress').innerText = localStorage.getItem('sumanProfileCurrentAddr_' + currentUser) || 'চিলাউ, চিলাই, ডোমার-5340, ডোমার, নীলফামারী,, পোস্টকোড - 5340, ডোমার, নীলফামারী, রংপুর';
-            document.getElementById('viewPermanentAddress').innerText = localStorage.getItem('sumanProfilePermAddr_' + currentUser) || 'চিলাউ, চিলাই, ডোমার-5340, ডোমার, নীলফামারী,, পোস্টকোড - 5340, ডোমার, নীলফামারী, রংপুর';
+            document.getElementById('viewOccupation').innerText = localStorage.getItem('sumanProfileOccupation_' + currentUser) || '-';
+            document.getElementById('viewCurrentAddress').innerText = localStorage.getItem('sumanProfileCurrentAddr_' + currentUser) || '-';
+            document.getElementById('viewPermanentAddress').innerText = localStorage.getItem('sumanProfilePermAddr_' + currentUser) || '-';
         }
 
         function openProfileModal() {
             document.getElementById('profileModal').style.display = 'flex';
             let currentUser = localStorage.getItem('sumanSiteUser');
 
-            document.getElementById('updateName').value = localStorage.getItem('sumanProfileName') || '';
+            document.getElementById('updateName').value = localStorage.getItem('sumanProfileName_' + currentUser) || '';
             document.getElementById('updateNameEn').value = localStorage.getItem('sumanProfileNameEn_' + currentUser) || '';
             document.getElementById('updatePhone').value = localStorage.getItem('sumanProfilePhone_' + currentUser) || '';
-            document.getElementById('updateEmail').value = localStorage.getItem('sumanProfileEmail_' + currentUser) || currentUser || '';
+            document.getElementById('updateEmail').value = currentUser || '';
             document.getElementById('updateFather').value = localStorage.getItem('sumanProfileFather_' + currentUser) || '';
             document.getElementById('updateFatherEn').value = localStorage.getItem('sumanProfileFatherEn_' + currentUser) || '';
             document.getElementById('updateMother').value = localStorage.getItem('sumanProfileMother_' + currentUser) || '';
@@ -1167,7 +1156,6 @@
             const name = document.getElementById('updateName').value.trim();
             const nameEn = document.getElementById('updateNameEn').value.trim();
             const phone = document.getElementById('updatePhone').value.trim();
-            const email = document.getElementById('updateEmail').value.trim().toLowerCase();
             const father = document.getElementById('updateFather').value.trim();
             const fatherEn = document.getElementById('updateFatherEn').value.trim();
             const mother = document.getElementById('updateMother').value.trim();
@@ -1182,10 +1170,9 @@
             const permAddr = document.getElementById('updatePermanentAddress').value.trim();
 
             if(name) {
-                localStorage.setItem('sumanProfileName', name);
+                localStorage.setItem('sumanProfileName_' + currentUser, name);
                 localStorage.setItem('sumanProfileNameEn_' + currentUser, nameEn);
                 localStorage.setItem('sumanProfilePhone_' + currentUser, phone);
-                localStorage.setItem('sumanProfileEmail_' + currentUser, email);
                 localStorage.setItem('sumanProfileFather_' + currentUser, father);
                 localStorage.setItem('sumanProfileFatherEn_' + currentUser, fatherEn);
                 localStorage.setItem('sumanProfileMother_' + currentUser, mother);
@@ -1199,12 +1186,11 @@
                 localStorage.setItem('sumanProfileCurrentAddr_' + currentUser, currAddr);
                 localStorage.setItem('sumanProfilePermAddr_' + currentUser, permAddr);
 
-                // Update email in database list if exists
-                let activeDb = JSON.parse(localStorage.getItem('sumanUsersDatabase')) || [];
-                let uObj = activeDb.find(u => u.username === currentUser);
+                let usersList = JSON.parse(localStorage.getItem('sumanUsersDatabase')) || [];
+                let uObj = usersList.find(u => u.email === currentUser);
                 if(uObj) {
-                    uObj.email = email;
-                    localStorage.setItem('sumanUsersDatabase', JSON.stringify(activeDb));
+                    uObj.name = name;
+                    localStorage.setItem('sumanUsersDatabase', JSON.stringify(usersList));
                 }
 
                 alert('প্রোফাইল সফলভাবে হালনাগাদ করা হয়েছে!');
@@ -1238,27 +1224,26 @@
 
         function handleSignup() {
             const name = document.getElementById('signupName').value.trim();
-            const username = document.getElementById('signupEmail').value.trim().toLowerCase();
+            const email = document.getElementById('signupEmail').value.trim().toLowerCase();
             const password = document.getElementById('signupPass').value.trim();
 
-            if(!name || !username || !password) {
+            if(!name || !email || !password) {
                 alert('দয়া করে সব তথ্য পূরণ করুন।');
                 return;
             }
 
-            usersList = JSON.parse(localStorage.getItem('sumanUsersDatabase')) || [];
-            if(usersList.find(u => u.username === username)) {
-                alert('এই জিমেল বা ইউজারনেম দিয়ে অ্যাকাউন্ট আগেই তৈরি করা হয়েছে!');
+            let usersList = JSON.parse(localStorage.getItem('sumanUsersDatabase')) || [];
+            if(usersList.find(u => u.email === email)) {
+                alert('এই জিমেল দিয়ে ইতিপূর্বে একটি অ্যাকাউন্ট তৈরি করা হয়েছে!');
                 return;
             }
 
-            usersList.push({ username, email: username, password, name, role: "user" });
+            usersList.push({ email, password, name, role: "user" });
             localStorage.setItem('sumanUsersDatabase', JSON.stringify(usersList));
 
-            localStorage.setItem('sumanSiteUser', username);
+            localStorage.setItem('sumanProfileName_' + email, name);
+            localStorage.setItem('sumanSiteUser', email);
             localStorage.setItem('sumanUserRole', 'user');
-            localStorage.setItem('sumanProfileName', name);
-            localStorage.setItem('sumanProfileEmail_' + username, username);
 
             alert('নাগরিক অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে!');
             closeModal('signupModal');
@@ -1271,7 +1256,6 @@
             if(password === "Sumon77@") {
                 localStorage.setItem('sumanSiteUser', 'Sumon77');
                 localStorage.setItem('sumanUserRole', 'admin');
-                localStorage.setItem('sumanProfileName', 'মোঃ সুমন ইসলাম (অ্যাডমিন)');
 
                 closeModal('adminLoginModal');
                 checkAuthState();
@@ -1282,31 +1266,30 @@
         }
 
         function handleCitizenLogin() {
-            const username = document.getElementById('citizenUser').value.trim().toLowerCase();
+            const email = document.getElementById('citizenUser').value.trim().toLowerCase();
             const password = document.getElementById('citizenPass').value.trim();
 
-            let activeDb = JSON.parse(localStorage.getItem('sumanUsersDatabase')) || [];
-            const foundUser = activeDb.find(u => (u.username === username || u.email === username) && u.password === password && u.role === 'user');
+            let usersList = JSON.parse(localStorage.getItem('sumanUsersDatabase')) || [];
+            const foundUser = usersList.find(u => u.email === email && u.password === password && u.role === 'user');
 
             if(foundUser) {
-                localStorage.setItem('sumanSiteUser', foundUser.username);
+                localStorage.setItem('sumanSiteUser', foundUser.email);
                 localStorage.setItem('sumanUserRole', 'user');
-                localStorage.setItem('sumanProfileName', foundUser.name);
 
                 closeModal('citizenLoginModal');
                 checkAuthState();
                 alert('নাগরিক সফলভাবে লগইন করেছেন!');
             } else {
-                alert('ভুল নাগরিক জিমেল/ইউজারনেম বা পাসওয়ার্ড!');
+                alert('ভুল জিমেল বা পাসওয়ার্ড!');
             }
         }
 
         function handleForgotPassword(event) {
             event.preventDefault();
-            const username = prompt("আপনার রেজিস্টার্ড জিমেল বা ইউজারনেম লিখুন:");
-            if(username) {
-                let activeDb = JSON.parse(localStorage.getItem('sumanUsersDatabase')) || [];
-                const found = activeDb.find(u => u.username === username.trim().toLowerCase() || u.email === username.trim().toLowerCase());
+            const email = prompt("আপনার রেজিস্টার্ড জিমেল লিখুন:");
+            if(email) {
+                let usersList = JSON.parse(localStorage.getItem('sumanUsersDatabase')) || [];
+                const found = usersList.find(u => u.email === email.trim().toLowerCase());
                 if(found) {
                     alert(`আপনার পাসওয়ার্ড হলো: ${found.password}`);
                 } else {
@@ -1318,7 +1301,6 @@
         function logout() {
             localStorage.removeItem('sumanSiteUser');
             localStorage.removeItem('sumanUserRole');
-            localStorage.removeItem('sumanProfileName');
             checkAuthState();
             alert('লগআউট সফল হয়েছে।');
         }
@@ -1328,6 +1310,7 @@
             const trx = document.getElementById('depositTrx').value.trim();
             let currentUser = localStorage.getItem('sumanSiteUser');
             if(amount && trx) {
+                let deposits = JSON.parse(localStorage.getItem('sumanUserDeposits')) || [];
                 deposits.push({ id: Date.now(), user: currentUser, amount, trx, status: 'পেন্ডিং (Pending)' });
                 localStorage.setItem('sumanUserDeposits', JSON.stringify(deposits));
                 closeModal('depositModal');
@@ -1344,6 +1327,7 @@
 
             if(amount && number) {
                 if(currentBalance >= amount) {
+                    let withdraws = JSON.parse(localStorage.getItem('sumanUserWithdraws')) || [];
                     withdraws.push({ id: Date.now(), user: currentUser, method, number, amount, status: 'পেন্ডিং (Pending)' });
                     localStorage.setItem('sumanUserWithdraws', JSON.stringify(withdraws));
                     closeModal('withdrawModal');
@@ -1355,6 +1339,7 @@
         }
 
         function approveDeposit(id) {
+            let deposits = JSON.parse(localStorage.getItem('sumanUserDeposits')) || [];
             const dep = deposits.find(d => d.id === id);
             if(dep) {
                 dep.status = 'সফল (Approved)';
@@ -1367,6 +1352,7 @@
         }
 
         function rejectDeposit(id) {
+            let deposits = JSON.parse(localStorage.getItem('sumanUserDeposits')) || [];
             const dep = deposits.find(d => d.id === id);
             if(dep) { 
                 dep.status = 'বাতিল (Rejected)'; 
@@ -1376,6 +1362,7 @@
         }
 
         function approveWithdraw(id) {
+            let withdraws = JSON.parse(localStorage.getItem('sumanUserWithdraws')) || [];
             const wth = withdraws.find(w => w.id === id);
             if(wth) {
                 wth.status = 'সফল (Approved)';
@@ -1390,6 +1377,7 @@
         }
 
         function rejectWithdraw(id) {
+            let withdraws = JSON.parse(localStorage.getItem('sumanUserWithdraws')) || [];
             const wth = withdraws.find(w => w.id === id);
             if(wth) { 
                 wth.status = 'বাতিল (Rejected)'; 
@@ -1399,6 +1387,7 @@
         }
 
         function approveTaskProof(proofId) {
+            let taskProofs = JSON.parse(localStorage.getItem('sumanTaskProofs')) || [];
             const proof = taskProofs.find(p => p.id === proofId);
             if(proof && proof.status.includes('Pending')) {
                 proof.status = 'সফল (Approved)';
@@ -1427,6 +1416,7 @@
         }
 
         function rejectTaskProof(proofId) {
+            let taskProofs = JSON.parse(localStorage.getItem('sumanTaskProofs')) || [];
             const proof = taskProofs.find(p => p.id === proofId);
             if(proof) { 
                 proof.status = 'বাতিল (Rejected)'; 
@@ -1523,6 +1513,7 @@
                 alert('দয়া করে স্ক্রিনশট আপলোড করুন।');
                 return;
             }
+            let taskProofs = JSON.parse(localStorage.getItem('sumanTaskProofs')) || [];
             taskProofs.push({
                 id: Date.now(),
                 taskId: currentActiveTask.id,
@@ -1563,9 +1554,9 @@
 
         function renderUserHistory() {
             let currentUser = localStorage.getItem('sumanSiteUser');
-            deposits = JSON.parse(localStorage.getItem('sumanUserDeposits')) || [];
-            withdraws = JSON.parse(localStorage.getItem('sumanUserWithdraws')) || [];
-            taskProofs = JSON.parse(localStorage.getItem('sumanTaskProofs')) || [];
+            let deposits = JSON.parse(localStorage.getItem('sumanUserDeposits')) || [];
+            let withdraws = JSON.parse(localStorage.getItem('sumanUserWithdraws')) || [];
+            let taskProofs = JSON.parse(localStorage.getItem('sumanTaskProofs')) || [];
 
             document.getElementById('userDepositHistory').innerHTML = deposits.filter(d => d.user === currentUser).map(d => `
                 <div class="request-item"><div>টাকা: ৳${d.amount} | TrxID: ${d.trx}</div><div>স্ট্যাটাস: <span class="${d.status.includes('Pending')?'status-pending':'status-approved'}">${d.status}</span></div></div>
@@ -1580,40 +1571,38 @@
             `).join('') || '<p style="color: #94a3b8;">কোনো টাস্ক প্রুফ রেকর্ড নেই।</p>';
         }
 
-        // অ্যাডমিন জিমেল দিয়ে ইউজার সার্চ করার ফাংশন
         function searchUserByAdmin() {
             const query = document.getElementById('adminSearchInput').value.trim().toLowerCase();
             const resultBox = document.getElementById('adminSearchResult');
             
             if(!query) {
-                alert('দয়া করে ইউজারের জিমেল বা ইউজারনেম লিখুন।');
+                alert('দয়া করে ইউজারের জিমেল লিখুন।');
                 return;
             }
 
-            let activeDb = JSON.parse(localStorage.getItem('sumanUsersDatabase')) || [];
-            const user = activeDb.find(u => u.username === query || u.email === query);
+            let usersList = JSON.parse(localStorage.getItem('sumanUsersDatabase')) || [];
+            const user = usersList.find(u => u.email === query);
 
             if(!user) {
                 resultBox.style.display = 'block';
-                resultBox.innerHTML = '<p style="color: #ef4444;">এই জিমেল বা ইউজারনেম দিয়ে কোনো ইউজার পাওয়া যায়নি!</p>';
+                resultBox.innerHTML = '<p style="color: #ef4444;">এই জিমেল দিয়ে কোনো ইউজার পাওয়া যায়নি!</p>';
                 return;
             }
 
-            // ইউজার ডাটা ও হিস্টোরি সংগ্রহ
-            let uName = localStorage.getItem('sumanProfileName') || user.name;
-            let uPhone = localStorage.getItem('sumanProfilePhone_' + user.username) || '০১৭...';
-            let uBal = localStorage.getItem('sumanEarnBalance_' + user.username) || '0.00';
-            let uTasksDone = localStorage.getItem('sumanTasksDone_' + user.username) || '0';
+            let uName = localStorage.getItem('sumanProfileName_' + user.email) || user.name;
+            let uPhone = localStorage.getItem('sumanProfilePhone_' + user.email) || 'দেওয়া হয়নি';
+            let uBal = localStorage.getItem('sumanEarnBalance_' + user.email) || '0.00';
+            let uTasksDone = localStorage.getItem('sumanTasksDone_' + user.email) || '0';
 
-            let uDeposits = (JSON.parse(localStorage.getItem('sumanUserDeposits')) || []).filter(d => d.user === user.username);
-            let uWithdraws = (JSON.parse(localStorage.getItem('sumanUserWithdraws')) || []).filter(w => w.user === user.username);
-            let uProofs = (JSON.parse(localStorage.getItem('sumanTaskProofs')) || []).filter(p => p.user === user.username);
+            let uDeposits = (JSON.parse(localStorage.getItem('sumanUserDeposits')) || []).filter(d => d.user === user.email);
+            let uWithdraws = (JSON.parse(localStorage.getItem('sumanUserWithdraws')) || []).filter(w => w.user === user.email);
+            let uProofs = (JSON.parse(localStorage.getItem('sumanTaskProofs')) || []).filter(p => p.user === user.email);
 
             resultBox.style.display = 'block';
             resultBox.innerHTML = `
                 <h4 style="color: #10b981; margin-bottom: 10px;">ইউজার প্রোফাইল বিবরণ:</h4>
                 <p><strong>নাম:</strong> ${uName}</p>
-                <p><strong>জিমেল/ইউজারনেম:</strong> ${user.username}</p>
+                <p><strong>জিমেল:</strong> ${user.email}</p>
                 <p><strong>ফোন:</strong> ${uPhone}</p>
                 <p><strong>ব্যালেন্স:</strong> ৳${uBal}</p>
                 <p><strong>সম্পন্ন টাস্ক:</strong> ${uTasksDone}টি</p>
@@ -1627,9 +1616,9 @@
         }
 
         function renderAdminPanel() {
-            taskProofs = JSON.parse(localStorage.getItem('sumanTaskProofs')) || [];
-            deposits = JSON.parse(localStorage.getItem('sumanUserDeposits')) || [];
-            withdraws = JSON.parse(localStorage.getItem('sumanUserWithdraws')) || [];
+            let taskProofs = JSON.parse(localStorage.getItem('sumanTaskProofs')) || [];
+            let deposits = JSON.parse(localStorage.getItem('sumanUserDeposits')) || [];
+            let withdraws = JSON.parse(localStorage.getItem('sumanUserWithdraws')) || [];
 
             const proofContainer = document.getElementById('adminTaskProofList');
             const pendingProofs = taskProofs.filter(p => p.status.includes('Pending'));
@@ -1661,7 +1650,7 @@
             `).join('') || '<p style="color: #94a3b8;">কোনো পেন্ডিং ডিপোজিট নেই।</p>';
 
             document.getElementById('adminWithdrawList').innerHTML = withdraws.filter(w => w.status.includes('Pending')).map(w => `
-                <div class="request-item">
+                <div class="request-id">
                     <div><strong>ইউজার:</strong> ${w.user} | <strong>মেথড:</strong> ${w.method} (${w.number}) | <strong>পরিমাণ:</strong> ৳${w.amount}</div>
                     <div>
                         <button class="approve-btn" onclick="approveWithdraw(${w.id})">এপ্রুভ</button>
@@ -1676,7 +1665,8 @@
             let currentBalance = parseFloat(localStorage.getItem('sumanEarnBalance_' + currentUser)) || 0.00;
             let tasksDone = parseInt(localStorage.getItem('sumanTasksDone_' + currentUser)) || 0;
 
-            document.getElementById('profileName').innerText = localStorage.getItem('sumanProfileName') || currentUser;
+            let displayName = localStorage.getItem('sumanProfileName_' + currentUser) || currentUser;
+            document.getElementById('profileName').innerText = displayName;
             document.getElementById('balance').innerText = currentBalance.toFixed(2);
             document.getElementById('completedTasks').innerText = tasksDone;
         }
@@ -1684,4 +1674,4 @@
         window.onload = function() { checkAuthState(); }
     </script>
 </body>
-</html>
+                </html>
