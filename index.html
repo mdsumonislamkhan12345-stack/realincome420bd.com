@@ -201,7 +201,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.75);
+            background: rgba(0, 0, 0, 0.7);
             justify-content: center;
             align-items: center;
             z-index: 1000;
@@ -530,33 +530,24 @@
             }
         }
     </style>
-
-    <!-- Firebase SDKs (CDN) with your new configuration -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyC2RlY0jeOnn-2Xa1YvqpLRaPK5OQTx6Zc",
-            authDomain: "realincomebd420.firebaseapp.com",
-            projectId: "realincomebd420",
-            storageBucket: "realincomebd420.firebasestorage.app",
-            messagingSenderId: "79831364332",
-            appId: "1:79831364332:web:687bfd61c1dddab88febc9",
-            measurementId: "G-924T9LMPTV"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        window.firebaseAuth = { auth, db, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, doc, setDoc, getDoc, updateDoc, collection, addDoc, getDocs, query, where };
-    </script>
 </head>
-<body onload="openWelcomeNotice()">
+<body>
+
+    <!-- এন্ট্রি নোটিশ বোর্ড পপ-আপ -->
+    <div class="modal" id="entryNoticeModal" style="display: flex;">
+        <div class="modal-content" style="max-width: 550px;">
+            <span class="close-btn" onclick="closeEntryNotice()">&times;</span>
+            <h3 style="color: #38bdf8; margin-bottom: 20px; text-align: center;">গুরুত্বপূর্ণ ঘোষণা ও নোটিশ</h3>
+            <div style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.7; text-align: left; margin-bottom: 20px;">
+                প্রিয় ইউজার, realincomebd420 প্ল্যাটফর্মে আপনাকে স্বাগতম।<br><br>
+                আমাদের কার্যপদ্ধতি সম্পর্কে আপনাদের স্পষ্ট ধারণা থাকা প্রয়োজন। এখানে আপনার কাজের বিনিময়ে পেমেন্ট কোনো এডমিনের ব্যক্তিগত তহবিল থেকে দেওয়া হয় না। গ্রাহকগণ আমাদের যে সেবা গ্রহণ করেন, সেই সেবামূল্য থেকেই আপনার পাওনা পরিশোধ করা হয়।<br><br>
+                সুতরাং, উইথড্র নিয়ে কোনো প্রকার দুশ্চিন্তা করার প্রয়োজন নেই। আপনারা সম্পূর্ণ নিশ্চিন্তে ও নিয়মের সাথে কাজ চালিয়ে যেতে পারেন।<br><br>
+                <strong>ধন্যবাদান্তে,</strong><br>
+                realincomebd420 টিম
+            </div>
+            <button class="submit-btn" onclick="closeEntryNotice()">পড়েছি, প্রবেশ করুন</button>
+        </div>
+    </div>
 
     <header>
         <div class="logo">
@@ -590,7 +581,7 @@
     <div class="container">
         <div class="running-notice-container">
             <marquee behavior="scroll" direction="left" scrollamount="5">
-                ✨ বিঃদ্রঃ মোঃ সুমন ইসলাম কতৃক এই সাইটটি ইনকাম করার জন্য সংস্করণ চলছে। খুব শীঘ্রই কাজ শুরু হবে। এখন কেউ ডিপোজিট করবেন না। ⚠️
+                ✨ বিঃদ্রঃ মো সুমন ইসলাম কতৃক এই সাইটটি ইনকাম করার জন্য সংস্করণ চলছে। খুব শীঘ্রই কাজ শুরু হবে। এখন কেউ ডিপোজিট করবেন না। ⚠️
             </marquee>
         </div>
 
@@ -600,7 +591,7 @@
                 <img id="displayUserImg" src="https://img.sanishtech.com/u/c7679322bc63ccc9ed6343ccae70184d.jpg" alt="মোঃ সুমন ইসলাম">
             </div>
             <h2>সোশ্যাল মিডিয়া টাস্ক ও আর্নিং প্ল্যাটফর্ম</h2>
-            <p>ফেসবুক পেজ ফলো করে, ইউটিউব চ্যানেল সাবস্ক্রাইব করে সহজে ইনকাম করুন।</p>
+            <p>ফেসবুক পেজ ফলো করে, ইউটিউব চ্যানেল ও টেলিগ্রাম চ্যানেলে জয়েন করে সহজে ইনকাম করুন।</p>
             <button class="submit-btn" style="width: 200px; margin: 0 auto;" onclick="openModal('signupModal')">শুরু করুন</button>
         </div>
 
@@ -805,21 +796,6 @@
         </div>
     </div>
 
-    <!-- Welcome Entry Notice Modal -->
-    <div class="modal" id="welcomeNoticeModal">
-        <div class="modal-content" style="max-width: 550px;">
-            <span class="close-btn" onclick="closeWelcomeNotice()">&times;</span>
-            <h3 style="color: #10b981; margin-bottom: 15px; text-align: center;">গুরুত্বপূর্ণ নোটিশ বোর্ড</h3>
-            <div style="color: #cbd5e1; font-size: 0.98rem; line-height: 1.7; text-align: left; margin-bottom: 20px;">
-                <p style="margin-bottom: 12px;">প্রিয় ইউজার, <strong>realincomebd420</strong> প্ল্যাটফর্মে আপনাকে স্বাগতম।</p>
-                <p style="margin-bottom: 12px;">আমাদের কার্যপদ্ধতি সম্পর্কে আপনাদের স্পষ্ট ধারণা থাকা প্রয়োজন। এখানে আপনার কাজের বিনিময়ে পেমেন্ট কোনো এডমিনের ব্যক্তিগত তহবিল থেকে দেওয়া হয় না। গ্রাহকগণ আমাদের যে সেবা গ্রহণ করেন, সেই সেবামূল্য থেকেই আপনার পাওনা পরিশোধ করা হয়।</p>
-                <p style="margin-bottom: 12px;">সুতরাং, উইথড্র নিয়ে কোনো প্রকার দুশ্চিন্তা করার প্রয়োজন নেই। আপনারা সম্পূর্ণ নিশ্চিন্তে ও নিয়মের সাথে কাজ চালিয়ে যেতে পারেন।</p>
-                <p style="margin-top: 15px; color: #38bdf8; font-weight: bold;">ধন্যবাদান্তে,<br>realincomebd420 টিম</p>
-            </div>
-            <button class="submit-btn" onclick="closeWelcomeNotice()">পড়েছি, সাইন ইন / লগইন করুন</button>
-        </div>
-    </div>
-
     <!-- Role Selection Modal -->
     <div class="modal" id="roleSelectModal">
         <div class="modal-content" style="text-align: center;">
@@ -838,7 +814,7 @@
             <span class="close-btn" onclick="closeModal('adminLoginModal')">&times;</span>
             <h3>অ্যাডমিন সিকিউরিটি ভেরিফিকেশন</h3>
             <div class="notice-box" style="text-align: center;">
-                নিরাপত্তার স্বার্থে ইউজারনেম গোপন রাখা হয়েছে[span_0](start_span)[span_0](end_span)।<br>শুধু আপনার অ্যাডমিন পাসওয়ার্ড দিন।
+                নিরাপত্তার স্বার্থে ইউজারনেম গোপন রাখা হয়েছে।<br>শুধু আপনার অ্যাডমিন পাসওয়ার্ড দিন।
             </div>
             <div class="form-group">
                 <label>অ্যাডমিন পাসওয়ার্ড</label>
@@ -857,7 +833,7 @@
             <span class="close-btn" onclick="closeModal('citizenLoginModal')">&times;</span>
             <h3>নাগরিক লগইন</h3>
             <div class="form-group">
-                <label>জিমেল বা ইমেইল</label>
+                <label>জিমেল বা ইউজারনেম</label>
                 <input type="text" id="citizenUser" placeholder="জিমেল দিন">
             </div>
             <div class="form-group">
@@ -867,6 +843,15 @@
                     <span class="eye-icon" onclick="togglePassword('citizenPass', this)">👁️</span>
                 </div>
             </div>
+            
+            <!-- শপথের চেকবক্স সেকশন -->
+            <div style="margin: 15px 0; background: #0f172a; padding: 12px; border-radius: 6px; border: 1px solid #334155;">
+                <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 0.85rem; color: #cbd5e1; line-height: 1.5;">
+                    <input type="checkbox" id="citizenOathCheckbox" style="margin-top: 3px; width: 18px; height: 18px; cursor: pointer; accent-color: #10b981;">
+                    <span>আমি আমার সৃষ্টি কর্তার নামে শপথ করে এই সাইটে নিবন্ধন করছি, আমি যত গুলো কাজ করবো সমস্ত কাজ লিগাল ভাবে করবো। কোন কাজ সম্পন্ন করার পর ওই কাজের টাকা গ্রহন করে উক্ত কাজ বাতিল করে দিবো না। (ফ্লো করা পেজ আনফ্লো করবো, সাবসক্রাইব করা চ্যানেল আনসাবসক্রাইব করবো না ইত্যাদি) যদি এমন কোন কাজ করি তাহলে আমি গ্রাহক ও সৃষ্টি কর্তার কাছে দায়ী থাকবো।</span>
+                </label>
+            </div>
+
             <div style="text-align: right; margin-bottom: 15px;">
                 <a href="#" onclick="handleForgotPassword(event)" style="color: #38bdf8; font-size: 0.85rem; text-decoration: none;">পাসওয়ার্ড ভুলে গেছেন?</a>
             </div>
@@ -881,9 +866,9 @@
             <h3>কাজের শর্ত</h3>
             <div class="notice-box">
                 <strong>শর্তাবলী:</strong><br>
-                ১. আপনার ফেসবুক অ্যাকাউন্ট এ একটি নতুন গ্রুপ তৈরি করুন (গ্রুপে মেম্বার না থাকলেও হবে)।<br>
-                ২. নিচের লিংকটি কপি করে সেই গ্রুপে পেস্ট করে দিয়ে মেসেজ সেন্ড করুন[span_1](start_span)[span_1](end_span)।<br>
-                ৩. তারপর লিংকটাতে ক্লিক করে পেজটি ফলো করুন এবং একটি স্ক্রিনশট নিন।
+                ১. প্রদত্ত লিংকটিতে ক্লিক করে নির্দিষ্ট সোশ্যাল মিডিয়া পেজ বা টেলিগ্রাম চ্যানেলে জয়েন/ফলো করুন।<br>
+                ২. জয়েন করার পর একটি স্ক্রিনশট নিন।<br>
+                ৩. নিচের বক্সে স্ক্রিনশট আপলোড করে প্রুফ জমা দিন।
             </div>
             <div class="form-group">
                 <label>কাজের লিংক:</label>
@@ -1001,15 +986,6 @@
                     <span class="eye-icon" onclick="togglePassword('signupPass', this)">👁️</span>
                 </div>
             </div>
-            
-            <!-- নতুন শপথের চেকবক্স সেকশন -->
-            <div class="form-group" style="display: flex; align-items: flex-start; gap: 10px; margin-top: 15px; background: rgba(16, 185, 129, 0.05); padding: 12px; border-radius: 6px; border: 1px dashed #10b981;">
-                <input type="checkbox" id="signupOathCheckbox" style="width: 20px; height: 20px; margin-top: 3px; cursor: pointer;">
-                <label for="signupOathCheckbox" style="font-size: 0.88rem; color: #cbd5e1; line-height: 1.5; cursor: pointer; user-select: none;">
-                    আমি আমার সৃষ্টিকর্তার নামে শপথ করে এই সাইটে নিবন্ধন করছি, আমি যতগুলো কাজ করবো সমস্ত কাজ লিগ্যালভাবে করবো। কোনো কাজ সম্পন্ন করার পর ওই কাজের টাকা গ্রহণ করে উক্ত কাজ বাতিল করে দিবো না[span_2](start_span)[span_2](end_span)। (ফলো করা পেজ আনফলো করবো, সাবস্ক্রাইব করা চ্যানেল আনসাবস্ক্রাইব করবো না ইত্যাদি) যদি এমন কোনো কাজ করি তাহলে আমি গ্রাহক ও সৃষ্টিকর্তার কাছে দায়ী থাকবো।
-                </label>
-            </div>
-
             <button class="submit-btn" onclick="handleSignup()">অ্যাকাউন্ট তৈরি করুন</button>
         </div>
     </div>
@@ -1040,20 +1016,24 @@
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal('withdrawModal')">&times;</span>
             <h3>টাকা তুলুন (Withdraw)</h3>
+            <div class="notice-box" style="font-size: 0.85rem; line-height: 1.5;">
+                ℹ️ <strong>সীমা:</strong> মোবাইল রিচার্জ সর্বনিম্ন **২০ টাকা** এবং বিকাশ/নগদ সর্বনিম্ন **৫০ টাকা**।
+            </div>
             <div class="form-group">
                 <label>পেমেন্ট মেথড</label>
                 <select id="withdrawMethod">
-                    <option value="Bkash">বিকাশ</option>
-                    <option value="Nagad">নগদ</option>
+                    <option value="Mobile Recharge">মোবাইল রিচার্জ (সর্বনিম্ন ২০ টাকা)</option>
+                    <option value="Bkash">বিকাশ (সর্বনিম্ন ৫০ টাকা)</option>
+                    <option value="Nagad">নগদ (সর্বনিম্ন ৫০ টাকা)</option>
                 </select>
             </div>
             <div class="form-group">
-                <label>একাউন্ট নম্বর</label>
-                <input type="text" id="withdrawNumber" placeholder="আপনার বিকাশ/নগদ নম্বর">
+                <label>একাউন্ট নম্বর / মোবাইল নম্বর</label>
+                <input type="text" id="withdrawNumber" placeholder="আপনার মোবাইল বা বিকাশ/নগদ নম্বর">
             </div>
             <div class="form-group">
                 <label>টাকার পরিমাণ</label>
-                <input type="number" id="withdrawAmount" placeholder="ন্যূনতম ১০০ টাকা">
+                <input type="number" id="withdrawAmount" placeholder="পরিমাণ লিখুন">
             </div>
             <button class="submit-btn" onclick="handleWithdrawRequest()">উইথড্র রিকুয়েস্ট পাঠান</button>
         </div>
@@ -1069,6 +1049,7 @@
                 <select id="taskType">
                     <option value="ফেসবুক পেজ ফলো">ফেসবুক পেজ ফলো</option>
                     <option value="ইউটিউব সাবস্ক্রাইব">ইউটিউব সাবস্ক্রাইব</option>
+                    <option value="টেলিগ্রাম চ্যানেলে জয়েন">টেলিগ্রাম চ্যানেলে জয়েন</option>
                 </select>
             </div>
             <div class="form-group">
@@ -1090,20 +1071,65 @@
         </div>
     </div>
 
+    <!-- মডিউলার ফায়ারবেস স্ক্রিপ্ট -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB1DKh4tOZxEktSaUPWs2FDixe5C7mMlBQ",
+            authDomain: "realincomebd4200.firebaseapp.com",
+            projectId: "realincomebd4200",
+            storageBucket: "realincomebd4200.firebasestorage.app",
+            messagingSenderId: "508560492324",
+            appId: "1:508560492324:web:8fe45261a7a59a42ce55b1",
+            measurementId: "G-44NJ2G5QY7"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const auth = getAuth(app);
+
+        window.fbAuth = auth;
+        window.fbCreateUser = createUserWithEmailAndPassword;
+        window.fbSignIn = signInWithEmailAndPassword;
+        window.fbSignOut = signOut;
+        window.fbResetPass = sendPasswordResetEmail;
+        window.fbUpdateProfile = updateProfile;
+
+        onAuthStateChanged(auth, (user) => {
+            const currentRole = localStorage.getItem('sumanUserRole');
+            if(currentRole === 'admin') {
+                checkAuthState();
+                return;
+            }
+
+            if(user) {
+                localStorage.setItem('sumanSiteUser', user.email);
+                localStorage.setItem('sumanUserRole', 'user');
+                if(user.displayName) {
+                    localStorage.setItem('sumanProfileName_' + user.email, user.displayName);
+                }
+            } else {
+                localStorage.removeItem('sumanSiteUser');
+                localStorage.removeItem('sumanUserRole');
+            }
+            checkAuthState();
+        });
+    </script>
+
     <script>
-        let tasks = [
-            { id: 1, type: "ফেসবুক পেজ ফলো", link: "https://www.facebook.com/profile.php?id=61587612126892", reward: 2, quantity: 4, completedCount: 0 }
+        let tasks = JSON.parse(localStorage.getItem('sumanTasksList')) || [
+            { id: 1, type: "ফেসবুক পেজ ফলো", link: "https://www.facebook.com/profile.php?id=61587612126892", reward: 2, quantity: 4, completedCount: 0 },
+            { id: 2, type: "টেলিগ্রাম চ্যানেলে জয়েন", link: "https://t.me/your_telegram_channel", reward: 2, quantity: 5, completedCount: 0 }
         ];
 
         let currentActiveTask = null;
         let selectedProofBase64 = '';
 
-        function openWelcomeNotice() {
-            document.getElementById('welcomeNoticeModal').style.display = 'flex';
-        }
-
-        function closeWelcomeNotice() {
-            document.getElementById('welcomeNoticeModal').style.display = 'none';
+        function closeEntryNotice() {
+            document.getElementById('entryNoticeModal').style.display = 'none';
         }
 
         function togglePassword(fieldId, iconElement) {
@@ -1118,52 +1144,35 @@
         }
 
         function checkAuthState() {
-            setTimeout(() => {
-                if (!window.firebaseAuth) return;
-                const { auth, onAuthStateChanged, db, doc, getDoc } = window.firebaseAuth;
-                
-                onAuthStateChanged(auth, async (user) => {
-                    if (user) {
-                        localStorage.setItem('sumanSiteUser', user.email);
-                        document.getElementById('homeContent').style.display = 'none';
-                        document.getElementById('authNav').style.display = 'none';
-                        document.getElementById('userNav').style.display = 'flex';
-                        
-                        if(user.email === 'sumon77@admin.com' || user.email.includes('admin')) {
-                            localStorage.setItem('sumanUserRole', 'admin');
-                            document.getElementById('dashboardArea').style.display = 'none';
-                            document.getElementById('profileViewArea').style.display = 'none';
-                            document.getElementById('historyArea').style.display = 'none';
-                            document.getElementById('adminDashboard').style.display = 'block';
-                            renderAdminPanel();
-                        } else {
-                            localStorage.setItem('sumanUserRole', 'user');
-                            try {
-                                const docSnap = await getDoc(doc(db, "users", user.uid));
-                                if (docSnap.exists()) {
-                                    const data = docSnap.data();
-                                    document.getElementById('userNameDisplay').innerText = data.name || user.email;
-                                    localStorage.setItem('sumanProfileName_' + user.email, data.name || '');
-                                    localStorage.setItem('sumanEarnBalance_' + user.email, data.balance || 0);
-                                    localStorage.setItem('sumanTasksDone_' + user.email, data.tasksDone || 0);
-                                }
-                            } catch(e) { console.log(e); }
-                            showDashboard();
-                        }
-                    } else {
-                        let role = localStorage.getItem('sumanUserRole');
-                        if(role === 'admin') return;
+            let loggedUser = localStorage.getItem('sumanSiteUser');
+            let role = localStorage.getItem('sumanUserRole');
 
-                        document.getElementById('homeContent').style.display = 'block';
-                        document.getElementById('authNav').style.display = 'flex';
-                        document.getElementById('userNav').style.display = 'none';
-                        document.getElementById('dashboardArea').style.display = 'none';
-                        document.getElementById('profileViewArea').style.display = 'none';
-                        document.getElementById('adminDashboard').style.display = 'none';
-                        document.getElementById('historyArea').style.display = 'none';
-                    }
-                });
-            }, 1000);
+            if (loggedUser) {
+                document.getElementById('homeContent').style.display = 'none';
+                document.getElementById('authNav').style.display = 'none';
+                document.getElementById('userNav').style.display = 'flex';
+                
+                let displayName = localStorage.getItem('sumanProfileName_' + loggedUser) || loggedUser;
+                document.getElementById('userNameDisplay').innerText = displayName;
+
+                if (role === 'admin') {
+                    document.getElementById('dashboardArea').style.display = 'none';
+                    document.getElementById('profileViewArea').style.display = 'none';
+                    document.getElementById('historyArea').style.display = 'none';
+                    document.getElementById('adminDashboard').style.display = 'block';
+                    renderAdminPanel();
+                } else {
+                    showDashboard();
+                }
+            } else {
+                document.getElementById('homeContent').style.display = 'block';
+                document.getElementById('authNav').style.display = 'flex';
+                document.getElementById('userNav').style.display = 'none';
+                document.getElementById('dashboardArea').style.display = 'none';
+                document.getElementById('profileViewArea').style.display = 'none';
+                document.getElementById('adminDashboard').style.display = 'none';
+                document.getElementById('historyArea').style.display = 'none';
+            }
         }
 
         function toggleMenu() {
@@ -1288,6 +1297,13 @@
                 localStorage.setItem('sumanProfileCurrentAddr_' + currentUser, currAddr);
                 localStorage.setItem('sumanProfilePermAddr_' + currentUser, permAddr);
 
+                let usersList = JSON.parse(localStorage.getItem('sumanUsersDatabase')) || [];
+                let uObj = usersList.find(u => u.email === currentUser);
+                if(uObj) {
+                    uObj.name = name;
+                    localStorage.setItem('sumanUsersDatabase', JSON.stringify(usersList));
+                }
+
                 alert('প্রোফাইল সফলভাবে হালনাগাদ করা হয়েছে!');
                 closeModal('profileModal');
                 showFullProfile();
@@ -1315,46 +1331,56 @@
 
         function selectCitizenLogin() {
             closeModal('roleSelectModal');
+            document.getElementById('citizenOathCheckbox').checked = false; // রিসেট চেকবক্স
             openModal('citizenLoginModal');
         }
 
         async function handleSignup() {
             const name = document.getElementById('signupName').value.trim();
             const email = document.getElementById('signupEmail').value.trim().toLowerCase();
-            const password = document.getElementById('signupPass').value.trim();
-            const isChecked = document.getElementById('signupOathCheckbox').checked;
+            const password = document.getElementById('signupPass').value;
 
             if(!name || !email || !password) {
-                alert('দয়া করে সব তথ্য পূরণ করুন।');
+                alert('দয়া করে নাম, জিমেল ও পাসওয়ার্ড—সব তথ্য পূরণ করুন।');
                 return;
             }
 
-            if(!isChecked) {
-                alert('শপথের চেকবক্সে টিক চিহ্ন দেওয়া বাধ্যতামূলক! টিক চিহ্ন না দিলে সাইন আপ করা যাবে না।');
+            if(password.length < 6) {
+                alert('পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।');
                 return;
             }
 
             try {
-                const { auth, db, createUserWithEmailAndPassword, doc, setDoc } = window.firebaseAuth;
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
+                const credential = await window.fbCreateUser(window.fbAuth, email, password);
+                if (credential.user) {
+                    await window.fbUpdateProfile(credential.user, { displayName: name });
+                }
 
-                await setDoc(doc(db, "users", user.uid), {
-                    name: name,
-                    email: email,
-                    balance: 0,
-                    tasksDone: 0
-                });
-
-                localStorage.setItem('sumanProfileName_' + email, name);
                 localStorage.setItem('sumanSiteUser', email);
                 localStorage.setItem('sumanUserRole', 'user');
+                localStorage.setItem('sumanProfileName_' + email, name);
 
-                alert('নাগরিক অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে এবং ফায়ারবেসে সংরক্ষিত হয়েছে!');
+                alert('নাগরিক অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে!');
                 closeModal('signupModal');
                 checkAuthState();
-            } catch (error) {
-                alert('সাইন আপে সমস্যা হয়েছে: ' + error.message);
+            } catch(error) {
+                console.error('Firebase signup error:', error);
+                switch(error.code) {
+                    case 'auth/email-already-in-use':
+                        alert('এই জিমেল দিয়ে ইতিমধ্যে অ্যাকাউন্ট আছে। সরাসরি লগইন করুন।');
+                        break;
+                    case 'auth/invalid-email':
+                        alert('সঠিক জিমেল ঠিকানা দিন।');
+                        break;
+                    case 'auth/weak-password':
+                        alert('পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের দিন।');
+                        break;
+                    case 'auth/operation-not-allowed':
+                        alert('Firebase Console-এ Email/Password Authentication এনেবল করা নেই।');
+                        break;
+                    default:
+                        alert('অ্যাকাউন্ট তৈরি করা যায়নি: ' + error.message);
+                }
             }
         }
 
@@ -1375,47 +1401,72 @@
 
         async function handleCitizenLogin() {
             const email = document.getElementById('citizenUser').value.trim().toLowerCase();
-            const password = document.getElementById('citizenPass').value.trim();
+            const password = document.getElementById('citizenPass').value;
+            const isOathChecked = document.getElementById('citizenOathCheckbox').checked;
+
+            if(!email || !password) {
+                alert('জিমেল ও পাসওয়ার্ড দিন।');
+                return;
+            }
+
+            if(!isOathChecked) {
+                alert('লগইন করার পূর্বে অবশ্যই শপথের চেকবক্সে টিক চিহ্ন দিতে হবে!');
+                return;
+            }
 
             try {
-                const { auth, signInWithEmailAndPassword } = window.firebaseAuth;
-                await signInWithEmailAndPassword(auth, email, password);
+                const credential = await window.fbSignIn(window.fbAuth, email, password);
+                const user = credential.user;
 
-                localStorage.setItem('sumanSiteUser', email);
+                localStorage.setItem('sumanSiteUser', user.email);
                 localStorage.setItem('sumanUserRole', 'user');
+                if(user.displayName) {
+                    localStorage.setItem('sumanProfileName_' + user.email, user.displayName);
+                }
 
                 closeModal('citizenLoginModal');
                 checkAuthState();
                 alert('নাগরিক সফলভাবে লগইন করেছেন!');
-            } catch (error) {
-                alert('লগইন ব্যর্থ হয়েছে[span_3](start_span)[span_3](end_span)! ভুল জিমেল বা পাসওয়ার্ড।');
+            } catch(error) {
+                console.error('Firebase login error:', error);
+                switch(error.code) {
+                    case 'auth/invalid-credential':
+                    case 'auth/wrong-password':
+                    case 'auth/user-not-found':
+                        alert('ভুল জিমেল বা পাসওয়ার্ড। নতুন হলে আগে সাইন আপ করুন।');
+                        break;
+                    case 'auth/invalid-email':
+                        alert('সঠিক জিমেল ঠিকানা দিন।');
+                        break;
+                    default:
+                        alert('লগইন করা যায়নি: ' + error.message);
+                }
             }
         }
 
         async function handleForgotPassword(event) {
-            event.preventDefault();
-            const emailInput = document.getElementById('citizenUser').value.trim().toLowerCase();
-            let email = emailInput || prompt("আপনার রেজিস্টার্ড জিমেল লিখুন:");
-            
-            if (email) {
-                try {
-                    const { auth, sendPasswordResetEmail } = window.firebaseAuth;
-                    await sendPasswordResetEmail(auth, email.trim());
-                    alert('পাসওয়ার্ড রিসেট করার লিংক আপনার জিমেইলে পাঠানো হয়েছে! ইনবক্স বা স্প্যাম ফোল্ডার চেক করুন।');
-                } catch (error) {
-                    alert('রিসেট লিংক পাঠাতে সমস্যা হয়েছে: ' + error.message);
-                }
-            } else {
-                alert('দয়া করে আপনার জিমেল প্রদান করুন।');
+            if(event) event.preventDefault();
+            const email = prompt('আপনার রেজিস্টার করা জিমেল লিখুন:');
+            if(!email) return;
+
+            const cleanEmail = email.trim().toLowerCase();
+            try {
+                await window.fbResetPass(window.fbAuth, cleanEmail);
+                alert('পাসওয়ার্ড রিসেট করার লিংক আপনার জিমেলে পাঠানো হয়েছে।');
+            } catch(error) {
+                alert('রিসেট লিংক পাঠানো যায়নি: ' + error.message);
             }
         }
 
         async function logout() {
+            const role = localStorage.getItem('sumanUserRole');
             try {
-                const { auth, signOut } = window.firebaseAuth;
-                await signOut(auth);
-            } catch(e) {}
-
+                if(role !== 'admin') {
+                    await window.fbSignOut(window.fbAuth);
+                }
+            } catch(error) {
+                console.error('Firebase logout error:', error);
+            }
             localStorage.removeItem('sumanSiteUser');
             localStorage.removeItem('sumanUserRole');
             checkAuthState();
@@ -1442,16 +1493,29 @@
             let currentUser = localStorage.getItem('sumanSiteUser');
             let currentBalance = parseFloat(localStorage.getItem('sumanEarnBalance_' + currentUser)) || 0.00;
 
-            if(amount && number) {
-                if(currentBalance >= amount) {
-                    let withdraws = JSON.parse(localStorage.getItem('sumanUserWithdraws')) || [];
-                    withdraws.push({ id: Date.now(), user: currentUser, method, number, amount, status: 'পেন্ডিং (Pending)' });
-                    localStorage.setItem('sumanUserWithdraws', JSON.stringify(withdraws));
-                    closeModal('withdrawModal');
-                    alert('উইথড্র রিকুয়েস্ট পাঠানো হয়েছে।');
-                } else {
-                    alert('পর্যাপ্ত ব্যালেন্স নেই!');
-                }
+            if(!amount || !number) {
+                alert('দয়া করে সঠিক পরিমাণ এবং নম্বর দিন।');
+                return;
+            }
+
+            // সর্বনিম্ন লিমিট চেক
+            if (method === 'Mobile Recharge' && amount < 20) {
+                alert('মোবাইল রিচার্জের জন্য সর্বনিম্ন পরিমাণ ২০ টাকা হতে হবে।');
+                return;
+            }
+            if ((method === 'Bkash' || method === 'Nagad') && amount < 50) {
+                alert(method + '-এর জন্য সর্বনিম্ন উইথড্র পরিমাণ ৫০ টাকা হতে হবে।');
+                return;
+            }
+
+            if(currentBalance >= amount) {
+                let withdraws = JSON.parse(localStorage.getItem('sumanUserWithdraws')) || [];
+                withdraws.push({ id: Date.now(), user: currentUser, method, number, amount, status: 'পেন্ডিং (Pending)' });
+                localStorage.setItem('sumanUserWithdraws', JSON.stringify(withdraws));
+                closeModal('withdrawModal');
+                alert('উইথড্র রিকুয়েস্ট পাঠানো হয়েছে।');
+            } else {
+                alert('পর্যাপ্ত ব্যালেন্স নেই!');
             }
         }
 
@@ -1515,6 +1579,7 @@
                     if(task.completedCount >= task.quantity) {
                         tasks = tasks.filter(t => t.id !== task.id);
                     }
+                    localStorage.setItem('sumanTasksList', JSON.stringify(tasks));
                 }
 
                 let userKey = proof.user;
@@ -1527,7 +1592,7 @@
 
                 localStorage.setItem('sumanTaskProofs', JSON.stringify(taskProofs));
                 renderAdminPanel();
-                alert('টাস্কটি সফলভাবে অনুমোদন করা হয়েছে এবং ইউজারের একাউন্টে অটোমেটিক টাকা যোগ হয়ে গেছে! ✅');
+                alert('টাস্কটি সফলভাবে অনুমোদন করা হয়েছে এবং ইউজারের একাউন্টে টাকা যোগ হয়েছে! ✅');
             }
         }
 
@@ -1562,7 +1627,9 @@
                     currentBalance -= cost;
                     localStorage.setItem('sumanEarnBalance_' + currentUser, currentBalance);
                     
+                    tasks = JSON.parse(localStorage.getItem('sumanTasksList')) || [];
                     tasks.push({ id: Date.now(), type, link, reward, quantity, completedCount: 0 });
+                    localStorage.setItem('sumanTasksList', JSON.stringify(tasks));
                     
                     closeModal('postTaskModal');
                     showDashboard();
@@ -1608,7 +1675,7 @@
                     alert('কপি করতে ব্যর্থ হয়েছে।');
                 }
             } catch (err) {
-                alert('আপনার ব্রাউজার অটোমেটিক কপি সাপোর্ট করছে না[span_4](start_span)[span_4](end_span)।');
+                alert('আপনার ব্রাউজার অটোমেটিক কপি সাপোর্ট করছে না।');
             }
         }
 
@@ -1639,13 +1706,14 @@
             });
             localStorage.setItem('sumanTaskProofs', JSON.stringify(taskProofs));
             closeModal('taskTermsModal');
-            alert('আপনার টাস্ক প্রুফটি অ্যাডমিনের কাছে সফলভাবে জমা হয়েছে। অ্যাডমিন অনুমোদন করলেই ব্যালেন্স যোগ হবে!');
+            alert('আপনার টাস্ক প্রুফটি অ্যাডমিনের কাছে জমা হয়েছে।');
             showDashboard();
         }
 
         function renderTasks() {
             const container = document.getElementById('taskListContainer');
             container.innerHTML = '';
+            tasks = JSON.parse(localStorage.getItem('sumanTasksList')) || [];
             if(tasks.length === 0) {
                 container.innerHTML = '<p style="color: #94a3b8; text-align: center;">এই মুহূর্তে কোনো কাজ নেই।</p>';
                 return;
@@ -1681,7 +1749,7 @@
 
             document.getElementById('userTaskProofsHistory').innerHTML = taskProofs.filter(p => p.user === currentUser).map(p => `
                 <div class="request-item"><div>রিওয়ার্ড: ৳${p.reward} | কাজের লিংক: <a href="${p.link}" target="_blank" style="color:#38bdf8;">লিংক</a></div><div>স্ট্যাটাস: <span class="${p.status.includes('Pending')?'status-pending':(p.status.includes('Approved')?'status-approved':'status-rejected')}">${p.status}</span></div></div>
-            `).join('') || '<p style="color: #94a3b8;">কোনো টাস্ক প্রুফ রেকর্ড নেই[span_5](start_span)[span_5](end_span).</p>';
+            `).join('') || '<p style="color: #94a3b8;">কোনো টাস্ক প্রুফ রেকর্ড নেই।</p>';
         }
 
         function searchUserByAdmin() {
@@ -1775,10 +1843,7 @@
             document.getElementById('completedTasks').innerText = tasksDone;
         }
 
-        window.onload = function() { 
-            openWelcomeNotice();
-            checkAuthState(); 
-        }
+        window.onload = function() { checkAuthState(); }
     </script>
 </body>
 </html>
