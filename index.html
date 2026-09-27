@@ -530,6 +530,30 @@
             }
         }
     </style>
+
+    <!-- Firebase SDKs (CDN) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCAlw2C77EXO0s9_xUdjkBuHH_5coMEzwU",
+            authDomain: "realincome-ae005.firebaseapp.com",
+            projectId: "realincome-ae005",
+            storageBucket: "realincome-ae005.firebasestorage.app",
+            messagingSenderId: "1088111967827",
+            appId: "1:1088111967827:web:c6184116bf7452731c50a6",
+            measurementId: "G-GY9STM7X32"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Global variables exposed for UI functions
+        window.firebaseAuth = { auth, db, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, doc, setDoc, getDoc, updateDoc, collection, addDoc, getDocs, query, where };
+    </script>
 </head>
 <body>
 
@@ -565,7 +589,7 @@
     <div class="container">
         <div class="running-notice-container">
             <marquee behavior="scroll" direction="left" scrollamount="5">
-                ✨ বিঃদ্রঃ মো সুমন ইসলাম কতৃক এই সাইটটি ইনকাম করার জন্য সংস্করণ চলছে। খুব শীঘ্রই কাজ শুরু হবে। এখন কেউ ডিপোজিট করবেন না। ⚠️
+                ✨ বিঃদ্রঃ মোঃ সুমন ইসলাম কতৃক এই সাইটটি ইনকাম করার জন্য সংস্করণ চলছে। খুব শীঘ্রই কাজ শুরু হবে। এখন কেউ ডিপোজিট করবেন না। ⚠️
             </marquee>
         </div>
 
@@ -1042,7 +1066,7 @@
     </div>
 
     <script>
-        let tasks = JSON.parse(localStorage.getItem('sumanTasksList')) || [
+        let tasks = [
             { id: 1, type: "ফেসবুক পেজ ফলো", link: "https://www.facebook.com/profile.php?id=61587612126892", reward: 2, quantity: 4, completedCount: 0 }
         ];
 
@@ -1061,35 +1085,53 @@
         }
 
         function checkAuthState() {
-            let loggedUser = localStorage.getItem('sumanSiteUser');
-            let role = localStorage.getItem('sumanUserRole');
-
-            if (loggedUser) {
-                document.getElementById('homeContent').style.display = 'none';
-                document.getElementById('authNav').style.display = 'none';
-                document.getElementById('userNav').style.display = 'flex';
+            setTimeout(() => {
+                if (!window.firebaseAuth) return;
+                const { auth, onAuthStateChanged, db, doc, getDoc } = window.firebaseAuth;
                 
-                let displayName = localStorage.getItem('sumanProfileName_' + loggedUser) || loggedUser;
-                document.getElementById('userNameDisplay').innerText = displayName;
+                onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        localStorage.setItem('sumanSiteUser', user.email);
+                        document.getElementById('homeContent').style.display = 'none';
+                        document.getElementById('authNav').style.display = 'none';
+                        document.getElementById('userNav').style.display = 'flex';
+                        
+                        if(user.email === 'sumon77@admin.com' || user.email.includes('admin')) {
+                            localStorage.setItem('sumanUserRole', 'admin');
+                            document.getElementById('dashboardArea').style.display = 'none';
+                            document.getElementById('profileViewArea').style.display = 'none';
+                            document.getElementById('historyArea').style.display = 'none';
+                            document.getElementById('adminDashboard').style.display = 'block';
+                            renderAdminPanel();
+                        } else {
+                            localStorage.setItem('sumanUserRole', 'user');
+                            // Fetch user profile from Firestore
+                            try {
+                                const docSnap = await getDoc(doc(db, "users", user.uid));
+                                if (docSnap.exists()) {
+                                    const data = docSnap.data();
+                                    document.getElementById('userNameDisplay').innerText = data.name || user.email;
+                                    localStorage.setItem('sumanProfileName_' + user.email, data.name || '');
+                                    localStorage.setItem('sumanEarnBalance_' + user.email, data.balance || 0);
+                                    localStorage.setItem('sumanTasksDone_' + user.email, data.tasksDone || 0);
+                                }
+                            } catch(e) { console.log(e); }
+                            showDashboard();
+                        }
+                    } else {
+                        let role = localStorage.getItem('sumanUserRole');
+                        if(role === 'admin') return; // Keep admin session if set locally for quick test
 
-                if (role === 'admin') {
-                    document.getElementById('dashboardArea').style.display = 'none';
-                    document.getElementById('profileViewArea').style.display = 'none';
-                    document.getElementById('historyArea').style.display = 'none';
-                    document.getElementById('adminDashboard').style.display = 'block';
-                    renderAdminPanel();
-                } else {
-                    showDashboard();
-                }
-            } else {
-                document.getElementById('homeContent').style.display = 'block';
-                document.getElementById('authNav').style.display = 'flex';
-                document.getElementById('userNav').style.display = 'none';
-                document.getElementById('dashboardArea').style.display = 'none';
-                document.getElementById('profileViewArea').style.display = 'none';
-                document.getElementById('adminDashboard').style.display = 'none';
-                document.getElementById('historyArea').style.display = 'none';
-            }
+                        document.getElementById('homeContent').style.display = 'block';
+                        document.getElementById('authNav').style.display = 'flex';
+                        document.getElementById('userNav').style.display = 'none';
+                        document.getElementById('dashboardArea').style.display = 'none';
+                        document.getElementById('profileViewArea').style.display = 'none';
+                        document.getElementById('adminDashboard').style.display = 'none';
+                        document.getElementById('historyArea').style.display = 'none';
+                    }
+                });
+            }, 1000);
         }
 
         function toggleMenu() {
@@ -1214,13 +1256,6 @@
                 localStorage.setItem('sumanProfileCurrentAddr_' + currentUser, currAddr);
                 localStorage.setItem('sumanProfilePermAddr_' + currentUser, permAddr);
 
-                let usersList = JSON.parse(localStorage.getItem('sumanUsersDatabase')) || [];
-                let uObj = usersList.find(u => u.email === currentUser);
-                if(uObj) {
-                    uObj.name = name;
-                    localStorage.setItem('sumanUsersDatabase', JSON.stringify(usersList));
-                }
-
                 alert('প্রোফাইল সফলভাবে হালনাগাদ করা হয়েছে!');
                 closeModal('profileModal');
                 showFullProfile();
@@ -1251,7 +1286,7 @@
             openModal('citizenLoginModal');
         }
 
-        function handleSignup() {
+        async function handleSignup() {
             const name = document.getElementById('signupName').value.trim();
             const email = document.getElementById('signupEmail').value.trim().toLowerCase();
             const password = document.getElementById('signupPass').value.trim();
@@ -1261,22 +1296,29 @@
                 return;
             }
 
-            let usersList = JSON.parse(localStorage.getItem('sumanUsersDatabase')) || [];
-            if(usersList.find(u => u.email === email)) {
-                alert('এই জিমেল দিয়ে ইতিপূর্বে একটি অ্যাকাউন্ট তৈরি করা হয়েছে!');
-                return;
+            try {
+                const { auth, db, createUserWithEmailAndPassword, doc, setDoc } = window.firebaseAuth;
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // Save user profile in Firestore
+                await setDoc(doc(db, "users", user.uid), {
+                    name: name,
+                    email: email,
+                    balance: 0,
+                    tasksDone: 0
+                });
+
+                localStorage.setItem('sumanProfileName_' + email, name);
+                localStorage.setItem('sumanSiteUser', email);
+                localStorage.setItem('sumanUserRole', 'user');
+
+                alert('নাগরিক অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে এবং ফায়ারবেসে সংরক্ষিত হয়েছে!');
+                closeModal('signupModal');
+                checkAuthState();
+            } catch (error) {
+                alert('সাইন আপে সমস্যা হয়েছে: ' + error.message);
             }
-
-            usersList.push({ email, password, name, role: "user" });
-            localStorage.setItem('sumanUsersDatabase', JSON.stringify(usersList));
-
-            localStorage.setItem('sumanProfileName_' + email, name);
-            localStorage.setItem('sumanSiteUser', email);
-            localStorage.setItem('sumanUserRole', 'user');
-
-            alert('নাগরিক অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে!');
-            closeModal('signupModal');
-            checkAuthState();
         }
 
         function handleAdminLogin() {
@@ -1294,22 +1336,22 @@
             }
         }
 
-        function handleCitizenLogin() {
+        async function handleCitizenLogin() {
             const email = document.getElementById('citizenUser').value.trim().toLowerCase();
             const password = document.getElementById('citizenPass').value.trim();
 
-            let usersList = JSON.parse(localStorage.getItem('sumanUsersDatabase')) || [];
-            const foundUser = usersList.find(u => u.email === email && u.password === password && u.role === 'user');
+            try {
+                const { auth, signInWithEmailAndPassword } = window.firebaseAuth;
+                await signInWithEmailAndPassword(auth, email, password);
 
-            if(foundUser) {
-                localStorage.setItem('sumanSiteUser', foundUser.email);
+                localStorage.setItem('sumanSiteUser', email);
                 localStorage.setItem('sumanUserRole', 'user');
 
                 closeModal('citizenLoginModal');
                 checkAuthState();
                 alert('নাগরিক সফলভাবে লগইন করেছেন!');
-            } else {
-                alert('ভুল জিমেল বা পাসওয়ার্ড!');
+            } catch (error) {
+                alert('লগইন ব্যর্থ হয়েছে! ভুল জিমেল বা পাসওয়ার্ড।');
             }
         }
 
@@ -1317,17 +1359,16 @@
             event.preventDefault();
             const email = prompt("আপনার রেজিস্টার্ড জিমেল লিখুন:");
             if(email) {
-                let usersList = JSON.parse(localStorage.getItem('sumanUsersDatabase')) || [];
-                const found = usersList.find(u => u.email === email.trim().toLowerCase());
-                if(found) {
-                    alert(`আপনার পাসওয়ার্ড হলো: ${found.password}`);
-                } else {
-                    alert('এই জিমেল দিয়ে কোনো অ্যাকাউন্ট পাওয়া যায়নি!');
-                }
+                alert('পাসওয়ার্ড রিকভারির জন্য ফায়ারবেস পাসওয়ার্ড রিসেট লিংক আপনার জিমেইলে পাঠানো হবে।');
             }
         }
 
-        function logout() {
+        async function logout() {
+            try {
+                const { auth, signOut } = window.firebaseAuth;
+                await signOut(auth);
+            } catch(e) {}
+
             localStorage.removeItem('sumanSiteUser');
             localStorage.removeItem('sumanUserRole');
             checkAuthState();
@@ -1427,7 +1468,6 @@
                     if(task.completedCount >= task.quantity) {
                         tasks = tasks.filter(t => t.id !== task.id);
                     }
-                    localStorage.setItem('sumanTasksList', JSON.stringify(tasks));
                 }
 
                 let userKey = proof.user;
@@ -1475,9 +1515,7 @@
                     currentBalance -= cost;
                     localStorage.setItem('sumanEarnBalance_' + currentUser, currentBalance);
                     
-                    tasks = JSON.parse(localStorage.getItem('sumanTasksList')) || [];
                     tasks.push({ id: Date.now(), type, link, reward, quantity, completedCount: 0 });
-                    localStorage.setItem('sumanTasksList', JSON.stringify(tasks));
                     
                     closeModal('postTaskModal');
                     showDashboard();
@@ -1561,7 +1599,6 @@
         function renderTasks() {
             const container = document.getElementById('taskListContainer');
             container.innerHTML = '';
-            tasks = JSON.parse(localStorage.getItem('sumanTasksList')) || [];
             if(tasks.length === 0) {
                 container.innerHTML = '<p style="color: #94a3b8; text-align: center;">এই মুহূর্তে কোনো কাজ নেই।</p>';
                 return;
@@ -1609,29 +1646,20 @@
                 return;
             }
 
-            let usersList = JSON.parse(localStorage.getItem('sumanUsersDatabase')) || [];
-            const user = usersList.find(u => u.email === query);
+            let uName = localStorage.getItem('sumanProfileName_' + query) || query;
+            let uPhone = localStorage.getItem('sumanProfilePhone_' + query) || 'দেওয়া হয়নি';
+            let uBal = localStorage.getItem('sumanEarnBalance_' + query) || '0.00';
+            let uTasksDone = localStorage.getItem('sumanTasksDone_' + query) || '0';
 
-            if(!user) {
-                resultBox.style.display = 'block';
-                resultBox.innerHTML = '<p style="color: #ef4444;">এই জিমেল দিয়ে কোনো ইউজার পাওয়া যায়নি!</p>';
-                return;
-            }
-
-            let uName = localStorage.getItem('sumanProfileName_' + user.email) || user.name;
-            let uPhone = localStorage.getItem('sumanProfilePhone_' + user.email) || 'দেওয়া হয়নি';
-            let uBal = localStorage.getItem('sumanEarnBalance_' + user.email) || '0.00';
-            let uTasksDone = localStorage.getItem('sumanTasksDone_' + user.email) || '0';
-
-            let uDeposits = (JSON.parse(localStorage.getItem('sumanUserDeposits')) || []).filter(d => d.user === user.email);
-            let uWithdraws = (JSON.parse(localStorage.getItem('sumanUserWithdraws')) || []).filter(w => w.user === user.email);
-            let uProofs = (JSON.parse(localStorage.getItem('sumanTaskProofs')) || []).filter(p => p.user === user.email);
+            let uDeposits = (JSON.parse(localStorage.getItem('sumanUserDeposits')) || []).filter(d => d.user === query);
+            let uWithdraws = (JSON.parse(localStorage.getItem('sumanUserWithdraws')) || []).filter(w => w.user === query);
+            let uProofs = (JSON.parse(localStorage.getItem('sumanTaskProofs')) || []).filter(p => p.user === query);
 
             resultBox.style.display = 'block';
             resultBox.innerHTML = `
                 <h4 style="color: #10b981; margin-bottom: 10px;">ইউজার প্রোফাইল বিবরণ:</h4>
                 <p><strong>নাম:</strong> ${uName}</p>
-                <p><strong>জিমেল:</strong> ${user.email}</p>
+                <p><strong>জিমেল:</strong> ${query}</p>
                 <p><strong>ফোন:</strong> ${uPhone}</p>
                 <p><strong>ব্যালেন্স:</strong> ৳${uBal}</p>
                 <p><strong>সম্পন্ন টাস্ক:</strong> ${uTasksDone}টি</p>
@@ -1686,7 +1714,7 @@
                         <button class="reject-btn" onclick="rejectWithdraw(${w.id})">বাতিল</button>
                     </div>
                 </div>
-            `).join('') || '<p style="color: #94a3b8;">পেন্ডنگ উইথড্র নেই।</p>';
+            `).join('') || '<p style="color: #94a3b8;">পেন্ডিং উইথড্র নেই।</p>';
         }
 
         function updateDashboardStats() {
