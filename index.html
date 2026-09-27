@@ -838,7 +838,7 @@
             <span class="close-btn" onclick="closeModal('adminLoginModal')">&times;</span>
             <h3>অ্যাডমিন সিকিউরিটি ভেরিফিকেশন</h3>
             <div class="notice-box" style="text-align: center;">
-                নিরাপত্তার স্বার্থে ইউজারনেম গোপন রাখা হয়েছে।<br>শুধু আপনার অ্যাডমিন পাসওয়ার্ড দিন।
+                নিরাপত্তার স্বার্থে ইউজারনেম গোপন রাখা হয়েছে[span_0](start_span)[span_0](end_span)।<br>শুধু আপনার অ্যাডমিন পাসওয়ার্ড দিন।
             </div>
             <div class="form-group">
                 <label>অ্যাডমিন পাসওয়ার্ড</label>
@@ -882,7 +882,7 @@
             <div class="notice-box">
                 <strong>শর্তাবলী:</strong><br>
                 ১. আপনার ফেসবুক অ্যাকাউন্ট এ একটি নতুন গ্রুপ তৈরি করুন (গ্রুপে মেম্বার না থাকলেও হবে)।<br>
-                ২. নিচের লিংকটি কপি করে সেই গ্রুপে পেস্ট করে দিয়ে মেসেজ সেন্ড করুন।<br>
+                ২. নিচের লিংকটি কপি করে সেই গ্রুপে পেস্ট করে দিয়ে মেসেজ সেন্ড করুন[span_1](start_span)[span_1](end_span)।<br>
                 ৩. তারপর লিংকটাতে ক্লিক করে পেজটি ফলো করুন এবং একটি স্ক্রিনশট নিন।
             </div>
             <div class="form-group">
@@ -1001,6 +1001,15 @@
                     <span class="eye-icon" onclick="togglePassword('signupPass', this)">👁️</span>
                 </div>
             </div>
+            
+            <!-- নতুন শপথের চেকবক্স সেকশন -->
+            <div class="form-group" style="display: flex; align-items: flex-start; gap: 10px; margin-top: 15px; background: rgba(16, 185, 129, 0.05); padding: 12px; border-radius: 6px; border: 1px dashed #10b981;">
+                <input type="checkbox" id="signupOathCheckbox" style="width: 20px; height: 20px; margin-top: 3px; cursor: pointer;">
+                <label for="signupOathCheckbox" style="font-size: 0.88rem; color: #cbd5e1; line-height: 1.5; cursor: pointer; user-select: none;">
+                    আমি আমার সৃষ্টিকর্তার নামে শপথ করে এই সাইটে নিবন্ধন করছি, আমি যতগুলো কাজ করবো সমস্ত কাজ লিগ্যালভাবে করবো। কোনো কাজ সম্পন্ন করার পর ওই কাজের টাকা গ্রহণ করে উক্ত কাজ বাতিল করে দিবো না[span_2](start_span)[span_2](end_span)। (ফলো করা পেজ আনফলো করবো, সাবস্ক্রাইব করা চ্যানেল আনসাবস্ক্রাইব করবো না ইত্যাদি) যদি এমন কোনো কাজ করি তাহলে আমি গ্রাহক ও সৃষ্টিকর্তার কাছে দায়ী থাকবো।
+                </label>
+            </div>
+
             <button class="submit-btn" onclick="handleSignup()">অ্যাকাউন্ট তৈরি করুন</button>
         </div>
     </div>
@@ -1095,7 +1104,6 @@
 
         function closeWelcomeNotice() {
             document.getElementById('welcomeNoticeModal').style.display = 'none';
-            // নোটিশ বন্ধ হওয়ার পর ইউজার চাইলে লগইন/সাইন-ইন অপশন বা রোল সিলেক্ট মডাল দেখতে পারে
         }
 
         function togglePassword(fieldId, iconElement) {
@@ -1314,9 +1322,15 @@
             const name = document.getElementById('signupName').value.trim();
             const email = document.getElementById('signupEmail').value.trim().toLowerCase();
             const password = document.getElementById('signupPass').value.trim();
+            const isChecked = document.getElementById('signupOathCheckbox').checked;
 
             if(!name || !email || !password) {
                 alert('দয়া করে সব তথ্য পূরণ করুন।');
+                return;
+            }
+
+            if(!isChecked) {
+                alert('শপথের চেকবক্সে টিক চিহ্ন দেওয়া বাধ্যতামূলক! টিক চিহ্ন না দিলে সাইন আপ করা যাবে না।');
                 return;
             }
 
@@ -1374,7 +1388,7 @@
                 checkAuthState();
                 alert('নাগরিক সফলভাবে লগইন করেছেন!');
             } catch (error) {
-                alert('লগইন ব্যর্থ হয়েছে! ভুল জিমেল বা পাসওয়ার্ড।');
+                alert('লগইন ব্যর্থ হয়েছে[span_3](start_span)[span_3](end_span)! ভুল জিমেল বা পাসওয়ার্ড।');
             }
         }
 
@@ -1594,7 +1608,7 @@
                     alert('কপি করতে ব্যর্থ হয়েছে।');
                 }
             } catch (err) {
-                alert('আপনার ব্রাউজার অটোমেটিক কপি সাপোর্ট করছে না।');
+                alert('আপনার ব্রাউজার অটোমেটিক কপি সাপোর্ট করছে না[span_4](start_span)[span_4](end_span)।');
             }
         }
 
@@ -1667,7 +1681,7 @@
 
             document.getElementById('userTaskProofsHistory').innerHTML = taskProofs.filter(p => p.user === currentUser).map(p => `
                 <div class="request-item"><div>রিওয়ার্ড: ৳${p.reward} | কাজের লিংক: <a href="${p.link}" target="_blank" style="color:#38bdf8;">লিংক</a></div><div>স্ট্যাটাস: <span class="${p.status.includes('Pending')?'status-pending':(p.status.includes('Approved')?'status-approved':'status-rejected')}">${p.status}</span></div></div>
-            `).join('') || '<p style="color: #94a3b8;">কোনো টাস্ক প্রুফ রেকর্ড নেই।</p>';
+            `).join('') || '<p style="color: #94a3b8;">কোনো টাস্ক প্রুফ রেকর্ড নেই[span_5](start_span)[span_5](end_span).</p>';
         }
 
         function searchUserByAdmin() {
