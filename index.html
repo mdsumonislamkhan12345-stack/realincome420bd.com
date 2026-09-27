@@ -201,7 +201,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.75);
             justify-content: center;
             align-items: center;
             z-index: 1000;
@@ -531,31 +531,32 @@
         }
     </style>
 
-    <!-- Firebase SDKs (CDN) -->
+    <!-- Firebase SDKs (CDN) with your new configuration -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyCAlw2C77EXO0s9_xUdjkBuHH_5coMEzwU",
-            authDomain: "realincome-ae005.firebaseapp.com",
-            projectId: "realincome-ae005",
-            storageBucket: "realincome-ae005.firebasestorage.app",
-            messagingSenderId: "1088111967827",
-            appId: "1:1088111967827:web:c6184116bf7452731c50a6",
-            measurementId: "G-GY9STM7X32"
+            apiKey: "AIzaSyC2RlY0jeOnn-2Xa1YvqpLRaPK5OQTx6Zc",
+            authDomain: "realincomebd420.firebaseapp.com",
+            projectId: "realincomebd420",
+            storageBucket: "realincomebd420.firebasestorage.app",
+            messagingSenderId: "79831364332",
+            appId: "1:79831364332:web:687bfd61c1dddab88febc9",
+            measurementId: "G-924T9LMPTV"
         };
 
         const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Global variables exposed for UI functions
-        window.firebaseAuth = { auth, db, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, doc, setDoc, getDoc, updateDoc, collection, addDoc, getDocs, query, where };
+        window.firebaseAuth = { auth, db, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, doc, setDoc, getDoc, updateDoc, collection, addDoc, getDocs, query, where };
     </script>
 </head>
-<body>
+<body onload="openWelcomeNotice()">
 
     <header>
         <div class="logo">
@@ -804,6 +805,21 @@
         </div>
     </div>
 
+    <!-- Welcome Entry Notice Modal -->
+    <div class="modal" id="welcomeNoticeModal">
+        <div class="modal-content" style="max-width: 550px;">
+            <span class="close-btn" onclick="closeWelcomeNotice()">&times;</span>
+            <h3 style="color: #10b981; margin-bottom: 15px; text-align: center;">গুরুত্বপূর্ণ নোটিশ বোর্ড</h3>
+            <div style="color: #cbd5e1; font-size: 0.98rem; line-height: 1.7; text-align: left; margin-bottom: 20px;">
+                <p style="margin-bottom: 12px;">প্রিয় ইউজার, <strong>realincomebd420</strong> প্ল্যাটফর্মে আপনাকে স্বাগতম।</p>
+                <p style="margin-bottom: 12px;">আমাদের কার্যপদ্ধতি সম্পর্কে আপনাদের স্পষ্ট ধারণা থাকা প্রয়োজন। এখানে আপনার কাজের বিনিময়ে পেমেন্ট কোনো এডমিনের ব্যক্তিগত তহবিল থেকে দেওয়া হয় না। গ্রাহকগণ আমাদের যে সেবা গ্রহণ করেন, সেই সেবামূল্য থেকেই আপনার পাওনা পরিশোধ করা হয়।</p>
+                <p style="margin-bottom: 12px;">সুতরাং, উইথড্র নিয়ে কোনো প্রকার দুশ্চিন্তা করার প্রয়োজন নেই। আপনারা সম্পূর্ণ নিশ্চিন্তে ও নিয়মের সাথে কাজ চালিয়ে যেতে পারেন।</p>
+                <p style="margin-top: 15px; color: #38bdf8; font-weight: bold;">ধন্যবাদান্তে,<br>realincomebd420 টিম</p>
+            </div>
+            <button class="submit-btn" onclick="closeWelcomeNotice()">পড়েছি, সাইন ইন / লগইন করুন</button>
+        </div>
+    </div>
+
     <!-- Role Selection Modal -->
     <div class="modal" id="roleSelectModal">
         <div class="modal-content" style="text-align: center;">
@@ -841,7 +857,7 @@
             <span class="close-btn" onclick="closeModal('citizenLoginModal')">&times;</span>
             <h3>নাগরিক লগইন</h3>
             <div class="form-group">
-                <label>জিমেল বা ইউজারনেম</label>
+                <label>জিমেল বা ইমেইল</label>
                 <input type="text" id="citizenUser" placeholder="জিমেল দিন">
             </div>
             <div class="form-group">
@@ -1073,6 +1089,15 @@
         let currentActiveTask = null;
         let selectedProofBase64 = '';
 
+        function openWelcomeNotice() {
+            document.getElementById('welcomeNoticeModal').style.display = 'flex';
+        }
+
+        function closeWelcomeNotice() {
+            document.getElementById('welcomeNoticeModal').style.display = 'none';
+            // নোটিশ বন্ধ হওয়ার পর ইউজার চাইলে লগইন/সাইন-ইন অপশন বা রোল সিলেক্ট মডাল দেখতে পারে
+        }
+
         function togglePassword(fieldId, iconElement) {
             const passwordInput = document.getElementById(fieldId);
             if (passwordInput.type === "password") {
@@ -1105,7 +1130,6 @@
                             renderAdminPanel();
                         } else {
                             localStorage.setItem('sumanUserRole', 'user');
-                            // Fetch user profile from Firestore
                             try {
                                 const docSnap = await getDoc(doc(db, "users", user.uid));
                                 if (docSnap.exists()) {
@@ -1120,7 +1144,7 @@
                         }
                     } else {
                         let role = localStorage.getItem('sumanUserRole');
-                        if(role === 'admin') return; // Keep admin session if set locally for quick test
+                        if(role === 'admin') return;
 
                         document.getElementById('homeContent').style.display = 'block';
                         document.getElementById('authNav').style.display = 'flex';
@@ -1301,7 +1325,6 @@
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
 
-                // Save user profile in Firestore
                 await setDoc(doc(db, "users", user.uid), {
                     name: name,
                     email: email,
@@ -1355,11 +1378,21 @@
             }
         }
 
-        function handleForgotPassword(event) {
+        async function handleForgotPassword(event) {
             event.preventDefault();
-            const email = prompt("আপনার রেজিস্টার্ড জিমেল লিখুন:");
-            if(email) {
-                alert('পাসওয়ার্ড রিকভারির জন্য ফায়ারবেস পাসওয়ার্ড রিসেট লিংক আপনার জিমেইলে পাঠানো হবে।');
+            const emailInput = document.getElementById('citizenUser').value.trim().toLowerCase();
+            let email = emailInput || prompt("আপনার রেজিস্টার্ড জিমেল লিখুন:");
+            
+            if (email) {
+                try {
+                    const { auth, sendPasswordResetEmail } = window.firebaseAuth;
+                    await sendPasswordResetEmail(auth, email.trim());
+                    alert('পাসওয়ার্ড রিসেট করার লিংক আপনার জিমেইলে পাঠানো হয়েছে! ইনবক্স বা স্প্যাম ফোল্ডার চেক করুন।');
+                } catch (error) {
+                    alert('রিসেট লিংক পাঠাতে সমস্যা হয়েছে: ' + error.message);
+                }
+            } else {
+                alert('দয়া করে আপনার জিমেল প্রদান করুন।');
             }
         }
 
@@ -1728,7 +1761,10 @@
             document.getElementById('completedTasks').innerText = tasksDone;
         }
 
-        window.onload = function() { checkAuthState(); }
+        window.onload = function() { 
+            openWelcomeNotice();
+            checkAuthState(); 
+        }
     </script>
 </body>
 </html>
