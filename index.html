@@ -1121,8 +1121,8 @@
 
     <script>
         let tasks = JSON.parse(localStorage.getItem('sumanTasksList')) || [
-            { id: 1, type: "ফেসবুক পেজ ফলো", link: "https://www.facebook.com/profile.php?id=61587612126892", reward: 2, quantity: 4, completedCount: 0 },
-            { id: 2, type: "টেলিগ্রাম চ্যানেলে জয়েন", link: "https://t.me/your_telegram_channel", reward: 2, quantity: 5, completedCount: 0 }
+            { id: 1, postedBy: "admin", type: "ফেসবুক পেজ ফলো", link: "https://www.facebook.com/profile.php?id=61587612126892", reward: 2, quantity: 4, completedCount: 0 },
+            { id: 2, postedBy: "admin", type: "টেলিগ্রাম চ্যানেলে জয়েন", link: "https://t.me/your_telegram_channel", reward: 2, quantity: 5, completedCount: 0 }
         ];
 
         let currentActiveTask = null;
@@ -1331,7 +1331,7 @@
 
         function selectCitizenLogin() {
             closeModal('roleSelectModal');
-            document.getElementById('citizenOathCheckbox').checked = false; // রিসেট চেকবক্স
+            document.getElementById('citizenOathCheckbox').checked = false;
             openModal('citizenLoginModal');
         }
 
@@ -1374,9 +1374,6 @@
                         break;
                     case 'auth/weak-password':
                         alert('পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের দিন।');
-                        break;
-                    case 'auth/operation-not-allowed':
-                        alert('Firebase Console-এ Email/Password Authentication এনেবল করা নেই।');
                         break;
                     default:
                         alert('অ্যাকাউন্ট তৈরি করা যায়নি: ' + error.message);
@@ -1434,9 +1431,6 @@
                     case 'auth/wrong-password':
                     case 'auth/user-not-found':
                         alert('ভুল জিমেল বা পাসওয়ার্ড। নতুন হলে আগে সাইন আপ করুন।');
-                        break;
-                    case 'auth/invalid-email':
-                        alert('সঠিক জিমেল ঠিকানা দিন।');
                         break;
                     default:
                         alert('লগইন করা যায়নি: ' + error.message);
@@ -1498,7 +1492,6 @@
                 return;
             }
 
-            // সর্বনিম্ন লিমিট চেক
             if (method === 'Mobile Recharge' && amount < 20) {
                 alert('মোবাইল রিচার্জের জন্য সর্বনিম্ন পরিমাণ ২০ টাকা হতে হবে।');
                 return;
@@ -1628,7 +1621,8 @@
                     localStorage.setItem('sumanEarnBalance_' + currentUser, currentBalance);
                     
                     tasks = JSON.parse(localStorage.getItem('sumanTasksList')) || [];
-                    tasks.push({ id: Date.now(), type, link, reward, quantity, completedCount: 0 });
+                    // টাস্কের সাথে postedBy হিসেবে বর্তমান ইউজারের জিমেল সেভ করা হলো
+                    tasks.push({ id: Date.now(), postedBy: currentUser, type, link, reward, quantity, completedCount: 0 });
                     localStorage.setItem('sumanTasksList', JSON.stringify(tasks));
                     
                     closeModal('postTaskModal');
@@ -1643,6 +1637,15 @@
         }
 
         function openTaskTerms(taskId, taskLink, reward) {
+            let currentUser = localStorage.getItem('sumanSiteUser');
+            let taskProofs = JSON.parse(localStorage.getItem('sumanTaskProofs')) || [];
+
+            const alreadySubmitted = taskProofs.some(p => p.user === currentUser && p.taskId === taskId);
+            if(alreadySubmitted) {
+                alert('⚠️ আপনি এই কাজটি ইতিমধ্যে একবার সম্পন্ন করেছেন বা প্রুফ জমা দিয়েছেন। একই কাজ বারবার করা যাবে না!');
+                return;
+            }
+
             currentActiveTask = { id: taskId, link: taskLink, reward: reward };
             document.getElementById('modalTaskLinkDisplay').value = taskLink;
             document.getElementById('proofImageInput').value = '';
@@ -1695,6 +1698,14 @@
                 return;
             }
             let taskProofs = JSON.parse(localStorage.getItem('sumanTaskProofs')) || [];
+            
+            const alreadySubmitted = taskProofs.some(p => p.user === currentUser && p.taskId === currentActiveTask.id);
+            if(alreadySubmitted) {
+                alert('⚠️ আপনি এই কাজটি ইতিমধ্যে সম্পন্ন করেছেন!');
+                closeModal('taskTermsModal');
+                return;
+            }
+
             taskProofs.push({
                 id: Date.now(),
                 taskId: currentActiveTask.id,
@@ -1718,8 +1729,27 @@
                 container.innerHTML = '<p style="color: #94a3b8; text-align: center;">এই মুহূর্তে কোনো কাজ নেই।</p>';
                 return;
             }
+
+            let currentUser = localStorage.getItem('sumanSiteUser');
+            let taskProofs = JSON.parse(localStorage.getItem('sumanTaskProofs')) || [];
+
             tasks.forEach(task => {
                 const remaining = task.quantity - (task.completedCount || 0);
+                
+                // ১. যে কাজ পোস্ট করেছে, সে নিজে করতে পারবে না
+                const isOwner = task.postedBy === currentUser;
+                // ২. ইতিমধ্যে প্রুফ জমা দিয়েছে কি না
+                const isDoneByThisUser = taskProofs.some(p => p.user === currentUser && p.taskId === task.id);
+                
+                let buttonHtml = '';
+                if(isOwner) {
+                    buttonHtml = `<button class="task-btn" style="background: #334155; color: #94a3b8; cursor: not-allowed;" disabled>আপনার নিজের পোস্ট</button>`;
+                } else if(isDoneByThisUser) {
+                    buttonHtml = `<button class="task-btn" style="background: #475569; color: #94a3b8; cursor: not-allowed;" disabled>সম্পন্ন করা হয়েছে</button>`;
+                } else {
+                    buttonHtml = `<button class="task-btn" onclick="openTaskTerms(${task.id}, '${task.link}', ${task.reward})">কাজ করুন</button>`;
+                }
+
                 container.innerHTML += `
                     <div class="task-item">
                         <div>
@@ -1727,7 +1757,7 @@
                             <p style="font-size: 0.85rem; color: #94a3b8;">রিওয়ার্ড: ৳${task.reward} | বাকি: ${remaining}/${task.quantity}</p>
                             <a href="${task.link}" target="_blank" style="color: #38bdf8; font-size: 0.85rem;">${task.link}</a>
                         </div>
-                        <button class="task-btn" onclick="openTaskTerms(${task.id}, '${task.link}', ${task.reward})">কাজ করুন</button>
+                        <div>${buttonHtml}</div>
                     </div>
                 `;
             });
