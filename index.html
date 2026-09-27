@@ -592,6 +592,12 @@
             </div>
             <h2>সোশ্যাল মিডিয়া টাস্ক ও আর্নিং প্ল্যাটফর্ম</h2>
             <p>ফেসবুক পেজ ফলো করে, ইউটিউব চ্যানেল ও টেলিগ্রাম চ্যানেলে জয়েন করে সহজে ইনকাম করুন।</p>
+            
+            <!-- মোট মেম্বার কাউন্ট ডিসপ্লে (সবাই দেখতে পাবে) -->
+            <div style="margin-bottom: 20px; font-size: 1.1rem; color: #38bdf8; font-weight: bold;">
+                👥 মোট নিবন্ধিত সদস্য: <span id="totalMembersCount" style="color: #10b981;">0</span> জন
+            </div>
+
             <button class="submit-btn" style="width: 200px; margin: 0 auto;" onclick="openModal('signupModal')">শুরু করুন</button>
         </div>
 
@@ -1111,11 +1117,13 @@
                 if(user.displayName) {
                     localStorage.setItem('sumanProfileName_' + user.email, user.displayName);
                 }
+                registerMemberEmail(user.email);
             } else {
                 localStorage.removeItem('sumanSiteUser');
                 localStorage.removeItem('sumanUserRole');
             }
             checkAuthState();
+            updateTotalMembersCount();
         });
     </script>
 
@@ -1127,6 +1135,24 @@
 
         let currentActiveTask = null;
         let selectedProofBase64 = '';
+
+        function registerMemberEmail(email) {
+            let members = JSON.parse(localStorage.getItem('sumanRegisteredMembers')) || [];
+            if(!members.includes(email)) {
+                members.push(email);
+                localStorage.setItem('sumanRegisteredMembers', JSON.stringify(members));
+            }
+            updateTotalMembersCount();
+        }
+
+        function updateTotalMembersCount() {
+            let members = JSON.parse(localStorage.getItem('sumanRegisteredMembers')) || [];
+            let count = members.length > 0 ? members.length : 1; 
+            const countEl = document.getElementById('totalMembersCount');
+            if(countEl) {
+                countEl.innerText = count;
+            }
+        }
 
         function closeEntryNotice() {
             document.getElementById('entryNoticeModal').style.display = 'none';
@@ -1172,6 +1198,7 @@
                 document.getElementById('profileViewArea').style.display = 'none';
                 document.getElementById('adminDashboard').style.display = 'none';
                 document.getElementById('historyArea').style.display = 'none';
+                updateTotalMembersCount();
             }
         }
 
@@ -1297,13 +1324,6 @@
                 localStorage.setItem('sumanProfileCurrentAddr_' + currentUser, currAddr);
                 localStorage.setItem('sumanProfilePermAddr_' + currentUser, permAddr);
 
-                let usersList = JSON.parse(localStorage.getItem('sumanUsersDatabase')) || [];
-                let uObj = usersList.find(u => u.email === currentUser);
-                if(uObj) {
-                    uObj.name = name;
-                    localStorage.setItem('sumanUsersDatabase', JSON.stringify(usersList));
-                }
-
                 alert('প্রোফাইল সফলভাবে হালনাগাদ করা হয়েছে!');
                 closeModal('profileModal');
                 showFullProfile();
@@ -1359,6 +1379,7 @@
                 localStorage.setItem('sumanSiteUser', email);
                 localStorage.setItem('sumanUserRole', 'user');
                 localStorage.setItem('sumanProfileName_' + email, name);
+                registerMemberEmail(email);
 
                 alert('নাগরিক অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে!');
                 closeModal('signupModal');
@@ -1384,8 +1405,8 @@
         function handleAdminLogin() {
             const password = document.getElementById('adminPass').value.trim();
 
-            if(password === "Sumon77@") {
-                localStorage.setItem('sumanSiteUser', 'Sumon77');
+            if(password === "Sujon77@") {
+                localStorage.setItem('sumanSiteUser', 'Sujon77');
                 localStorage.setItem('sumanUserRole', 'admin');
 
                 closeModal('adminLoginModal');
@@ -1420,6 +1441,7 @@
                 if(user.displayName) {
                     localStorage.setItem('sumanProfileName_' + user.email, user.displayName);
                 }
+                registerMemberEmail(user.email);
 
                 closeModal('citizenLoginModal');
                 checkAuthState();
@@ -1621,7 +1643,6 @@
                     localStorage.setItem('sumanEarnBalance_' + currentUser, currentBalance);
                     
                     tasks = JSON.parse(localStorage.getItem('sumanTasksList')) || [];
-                    // টাস্কের সাথে postedBy হিসেবে বর্তমান ইউজারের জিমেল সেভ করা হলো
                     tasks.push({ id: Date.now(), postedBy: currentUser, type, link, reward, quantity, completedCount: 0 });
                     localStorage.setItem('sumanTasksList', JSON.stringify(tasks));
                     
@@ -1736,9 +1757,7 @@
             tasks.forEach(task => {
                 const remaining = task.quantity - (task.completedCount || 0);
                 
-                // ১. যে কাজ পোস্ট করেছে, সে নিজে করতে পারবে না
                 const isOwner = task.postedBy === currentUser;
-                // ২. ইতিমধ্যে প্রুফ জমা দিয়েছে কি না
                 const isDoneByThisUser = taskProofs.some(p => p.user === currentUser && p.taskId === task.id);
                 
                 let buttonHtml = '';
@@ -1873,7 +1892,10 @@
             document.getElementById('completedTasks').innerText = tasksDone;
         }
 
-        window.onload = function() { checkAuthState(); }
+        window.onload = function() { 
+            checkAuthState(); 
+            updateTotalMembersCount();
+        }
     </script>
 </body>
 </html>
