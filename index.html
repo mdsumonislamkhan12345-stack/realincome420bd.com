@@ -538,7 +538,7 @@
         <div class="modal-content" style="max-width: 550px;">
             <span class="close-btn" onclick="closeEntryNotice()">&times;</span>
             <h3 style="color: #38bdf8; margin-bottom: 20px; text-align: center;">গুরুত্বপূর্ণ ঘোষণা ও নোটিশ</h3>
-            <div style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.7; text-align: left; margin-bottom: 20px;">
+            <div id="entryNoticeText" style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.7; text-align: left; margin-bottom: 20px;">
                 প্রিয় ইউজার, realincomebd420 প্ল্যাটফর্মে আপনাকে স্বাগতম।<br><br>
                 আমাদের কার্যপদ্ধতি সম্পর্কে আপনাদের স্পষ্ট ধারণা থাকা প্রয়োজন। এখানে আপনার কাজের বিনিময়ে পেমেন্ট কোনো এডমিনের ব্যক্তিগত তহবিল থেকে দেওয়া হয় না। গ্রাহকগণ আমাদের যে সেবা গ্রহণ করেন, সেই সেবামূল্য থেকেই আপনার পাওনা পরিশোধ করা হয়।<br><br>
                 উল্লেখ্য যে, উইথড্র করার সময় প্ল্যাটফর্মের রক্ষণাবেক্ষণ ও পরিচালনার জন্য **৫% সার্ভিস চার্জ (কমিশন)** কাটা হয়।<br><br>
@@ -617,6 +617,16 @@
                 <div class="stat-card">
                     <h3>সম্পন্ন কাজ</h3>
                     <div class="value" id="completedTasks">0</div>
+                </div>
+            </div>
+
+            <!-- রেফারেল লিংক সেকশন -->
+            <div class="section-box" style="border: 1px solid #10b981;">
+                <h3>🔗 আপনার রেফারেল লিংক</h3>
+                <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 10px;">এই লিংকটি আপনার বন্ধুদের সাথে শেয়ার করুন। নতুন মেম্বার জয়েন করলে বোনাস পাবেন!</p>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="userReferralLinkInput" readonly style="flex: 1; padding: 10px; background: #0f172a; border: 1px solid #475569; border-radius: 6px; color: #38bdf8; font-weight: bold;">
+                    <button class="submit-btn" style="width: auto; margin-top: 0; padding: 10px 20px;" onclick="copyReferralLink()">লিংক কপি করুন</button>
                 </div>
             </div>
 
@@ -775,7 +785,6 @@
                 <button class="submit-btn" style="width: auto; padding: 8px 15px; background: #ef4444; color: #fff;" onclick="logout()">অ্যাডমিন লগআউট</button>
             </div>
 
-            <!-- অ্যাডমিন কমিশন আর্নিংস সামারি কার্ড -->
             <div class="stats-grid" style="margin-bottom: 25px;">
                 <div class="stat-card" style="border: 1px solid #10b981;">
                     <h3>উইথড্র কমিশন থেকে মোট আয় (৫%)</h3>
@@ -983,6 +992,9 @@
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal('signupModal')">&times;</span>
             <h3>নাগরিক হিসেবে সাইন আপ করুন</h3>
+            <div class="form-group" id="referredByBox" style="display: none; background: #0f172a; padding: 10px; border-radius: 6px; border: 1px solid #10b981; margin-bottom: 12px;">
+                <span style="font-size: 0.85rem; color: #10b981; font-weight: bold;">রেফারেন্স: <span id="referredByUserDisplay" style="color: #fff;"></span></span>
+            </div>
             <div class="form-group">
                 <label>আপনার নাম</label>
                 <input type="text" id="signupName" placeholder="পূর্ণ নাম লিখুন">
@@ -1147,6 +1159,18 @@
         let currentActiveTask = null;
         let selectedProofBase64 = '';
 
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const refUser = urlParams.get('ref');
+            if (refUser) {
+                localStorage.setItem('sumanReferredBy', refUser);
+                const noticeText = document.getElementById('entryNoticeText');
+                if(noticeText) {
+                    noticeText.innerHTML = `🎉 আপনাকে সাইটে আমন্ত্রণ জানিয়েছেন: <strong style="color: #38bdf8;">${refUser}</strong>!<br><br>` + noticeText.innerHTML;
+                }
+            }
+        });
+
         function registerMemberEmail(email) {
             let members = JSON.parse(localStorage.getItem('sumanRegisteredMembers')) || [];
             if(!members.includes(email)) {
@@ -1249,6 +1273,34 @@
             document.getElementById('dashboardArea').style.display = 'block';
             updateDashboardStats();
             renderTasks();
+            setupReferralLink();
+        }
+
+        function setupReferralLink() {
+            let currentUser = localStorage.getItem('sumanSiteUser');
+            if(currentUser) {
+                let refLink = window.location.origin + window.location.pathname + "?ref=" + encodeURIComponent(currentUser);
+                const refInput = document.getElementById('userReferralLinkInput');
+                if(refInput) {
+                    refInput.value = refLink;
+                }
+            }
+        }
+
+        function copyReferralLink() {
+            const refInput = document.getElementById('userReferralLinkInput');
+            refInput.select();
+            refInput.setSelectionRange(0, 99999);
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(refInput.value).then(() => {
+                    alert('রেফারেল লিংক সফলভাবে কপি হয়েছে!');
+                }).catch(err => {
+                    fallbackCopyText(refInput);
+                });
+            } else {
+                fallbackCopyText(refInput);
+            }
         }
 
         function showFullProfile() {
@@ -1351,7 +1403,19 @@
             renderUserHistory();
         }
 
-        function openModal(modalId) { document.getElementById(modalId).style.display = 'flex'; }
+        function openModal(modalId) { 
+            document.getElementById(modalId).style.display = 'flex'; 
+            if(modalId === 'signupModal') {
+                const refUser = localStorage.getItem('sumanReferredBy');
+                if(refUser) {
+                    document.getElementById('referredByBox').style.display = 'block';
+                    document.getElementById('referredByUserDisplay').innerText = refUser;
+                } else {
+                    document.getElementById('referredByBox').style.display = 'none';
+                }
+            }
+        }
+
         function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
 
         function selectAdminLogin() {
@@ -1390,6 +1454,12 @@
                 localStorage.setItem('sumanSiteUser', email);
                 localStorage.setItem('sumanUserRole', 'user');
                 localStorage.setItem('sumanProfileName_' + email, name);
+                
+                const refUser = localStorage.getItem('sumanReferredBy');
+                if(refUser) {
+                    localStorage.setItem('sumanReferredBy_' + email, refUser);
+                }
+
                 registerMemberEmail(email);
 
                 alert('নাগরিক অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে!');
@@ -1504,12 +1574,19 @@
             const amount = parseFloat(document.getElementById('depositAmount').value);
             const trx = document.getElementById('depositTrx').value.trim();
             let currentUser = localStorage.getItem('sumanSiteUser');
+            
             if(amount && trx) {
                 let deposits = JSON.parse(localStorage.getItem('sumanUserDeposits')) || [];
                 deposits.push({ id: Date.now(), user: currentUser, amount, trx, status: 'পেন্ডিং (Pending)' });
                 localStorage.setItem('sumanUserDeposits', JSON.stringify(deposits));
+                
+                // উইন্ডোজ স্টোরেজ ইভেন্ট ফায়ার করা যাতে অ্যাডমিন প্যানেল সাথে সাথে দেখতে পায়
+                window.dispatchEvent(new Event('storage'));
+
                 closeModal('depositModal');
-                alert('ডিপোজিট রিকুয়েস্ট পাঠানো হয়েছে।');
+                alert('ডিপোজিট রিকুয়েস্ট সফলভাবে পাঠানো হয়েছে।');
+            } else {
+                alert('দয়া করে সঠিক পরিমাণ এবং ট্রানজেকশন আইডি (TrxID) দিন।');
             }
         }
 
@@ -1538,6 +1615,10 @@
                 let withdraws = JSON.parse(localStorage.getItem('sumanUserWithdraws')) || [];
                 withdraws.push({ id: Date.now(), user: currentUser, method, number, amount, status: 'পেন্ডিং (Pending)' });
                 localStorage.setItem('sumanUserWithdraws', JSON.stringify(withdraws));
+                
+                // উইন্ডোজ স্টোরেজ ইভেন্ট ফায়ার করা
+                window.dispatchEvent(new Event('storage'));
+
                 closeModal('withdrawModal');
                 alert('উইথড্র রিকুয়েস্ট পাঠানো হয়েছে (৫% কমিশন কাটা হবে এপ্রুভ হওয়ার পর)।');
             } else {
@@ -1574,14 +1655,11 @@
             if(wth && wth.status.includes('Pending')) {
                 let bal = parseFloat(localStorage.getItem('sumanEarnBalance_' + wth.user)) || 0;
                 if(bal >= wth.amount) {
-                    // ৫% কমিশন হিসাব করা
                     let commission = wth.amount * 0.05;
                     let payableAmount = wth.amount - commission;
 
-                    // ইউজারের ব্যালেন্স থেকে সম্পূর্ণ উইথড্র অ্যামাউন্ট মাইনাস হবে
                     localStorage.setItem('sumanEarnBalance_' + wth.user, bal - wth.amount);
 
-                    // অ্যাডমিনের মোট কমিশন ব্যালেন্সে যোগ হবে
                     let totalComm = parseFloat(localStorage.getItem('sumanAdminTotalCommission')) || 0;
                     localStorage.setItem('sumanAdminTotalCommission', totalComm + commission);
 
@@ -1760,6 +1838,9 @@
                 status: 'পেন্ডিং (Pending)'
             });
             localStorage.setItem('sumanTaskProofs', JSON.stringify(taskProofs));
+            
+            window.dispatchEvent(new Event('storage'));
+
             closeModal('taskTermsModal');
             alert('আপনার টাস্ক প্রুফটি অ্যাডমিনের কাছে জমা হয়েছে।');
             showDashboard();
@@ -1865,7 +1946,6 @@
             let withdraws = JSON.parse(localStorage.getItem('sumanUserWithdraws')) || [];
             let totalComm = parseFloat(localStorage.getItem('sumanAdminTotalCommission')) || 0.00;
 
-            // অ্যাডমিন প্যানেলে মোট কমিশন আয় প্রদর্শন
             const commEl = document.getElementById('adminTotalCommission');
             if(commEl) {
                 commEl.innerText = totalComm.toFixed(2);
@@ -1910,6 +1990,14 @@
                 </div>
             `).join('') || '<p style="color: #94a3b8;">পেন্ডিং উইথড্র নেই।</p>';
         }
+
+        // অ্যাডমিন প্যানেল খোলা থাকাকালীন অটোমেটিক ডেটা আপডেট করার জন্য লিসেনার
+        window.addEventListener('storage', function(e) {
+            let role = localStorage.getItem('sumanUserRole');
+            if(role === 'admin') {
+                renderAdminPanel();
+            }
+        });
 
         function updateDashboardStats() {
             let currentUser = localStorage.getItem('sumanSiteUser');
